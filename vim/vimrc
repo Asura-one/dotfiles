@@ -51,6 +51,9 @@ Plugin 'metakirby5/codi.vim'
 " Vim for Dockerfile
 Plugin 'ekalinin/Dockerfile.vim'
 
+" Autoformat
+Plugin 'Chie192/vim-autoformat'
+
 " Line style
 " Plugin'liuchengxu/eleline.vim'
 
@@ -81,9 +84,10 @@ let mapleader=" "
 map <leader>g  :YcmCompleter GoToDefinitionElseDeclaration<CR>
 "
 call togglebg#map("<F5>")
-"colorscheme space-vim-dark
+colorscheme space-vim-dark
 set t_Co=256
 "set guifont=YaHeiConsolas:h11
+set termguicolors
 
 let NERDTreeIgnore=['\.pyc$', '\~$'] "ignore files in NERDTree
 
@@ -96,17 +100,17 @@ set noswapfile
 set number
 
 "python with virtualenv support
-"py << EOF
-"import os.path
-"import sys
-"import vim
-"if 'VIRTUA_ENV' in os.environ:
-"  project_base_dir = os.environ['VIRTUAL_ENV']
-"  sys.path.insert(0, project_base_dir)
-"  activate_this = os.path.join(project_base_dir,'bin/activate_this.py')
-"  #  execfile(activate_this, dict(__file__=activate_this))../
-"  execfile(activate_this, dict(__file__=activate_this))
-"EOF
+py << EOF
+import os.path
+import sys
+import vim
+if 'VIRTUA_ENV' in os.environ:
+  project_base_dir = os.environ['VIRTUAL_ENV']
+  sys.path.insert(0, project_base_dir)
+  activate_this = os.path.join(project_base_dir,'bin/activate_this.py')
+  #  execfile(activate_this, dict(__file__=activate_this))../
+  execfile(activate_this, dict(__file__=activate_this))
+EOF
 
 "it would be nice to set tag files by the active virtualenv here
 ":set tags=~/mytags "tags for ctags and taglist
@@ -211,11 +215,6 @@ endfunc
 
 
 
-" 透明
-"hi Normal ctermbg=None
-
-
-
 " for python docstring
 " Raimondi/delimitMate config
 au FileType python let b:delimitMate_nesting_quotes = ['"']
@@ -242,43 +241,8 @@ set incsearch 	" incremental search
 set autochdir 	" 打开文件时，自动 cd 到文件所在目录
 
 
-" function! Buf_total_num()
-"     return len(filter(range(1, bufnr('$')), 'buflisted(v:val)'))
-" endfunction
-" function! File_size(f)
-"     let l:size = getfsize(expand(a:f))
-"     if l:size == 0 || l:size == -1 || l:size == -2
-"         return ''
-"     endif
-"     if l:size < 1024
-"         return l:size.' bytes'
-"     elseif l:size < 1024*1024
-"         return printf('%.1f', l:size/1024.0).'k'
-"     elseif l:size < 1024*1024*1024
-"         return printf('%.1f', l:size/1024.0/1024.0) . 'm'
-"     else
-"         return printf('%.1f', l:size/1024.0/1024.0/1024.0) . 'g'
-"     endif
-" endfunction
-" set statusline=%<%1*[B-%n]%*
-" " TOT is an abbreviation for total
-" set statusline+=%2*[TOT:%{Buf_total_num()}]%*
-" set statusline+=%3*\ %{File_size(@%)}\ %*
-" set statusline+=%4*\ %F\ %*
-" set statusline+=%5*『\ %{exists('g:loaded_ale')?ALEGetStatusLine():''}』%{exists('g:loaded_fugitive')?fugitive#statusline():''}%*
-" set statusline+=%6*\ %m%r%y\ %*
-" set statusline+=%=%7*\ %{&ff}\ \|\ %{\"\".(&fenc==\"\"?&enc:&fenc).((exists(\"+bomb\")\ &&\ &bomb)?\",B\":\"\").\"\ \|\"}\ %-14.(%l:%c%V%)%*
-" set statusline+=%8*\ %P\ %*
-" " default bg for statusline is 236 in space-vim-dark
-" hi User1 cterm=bold ctermfg=232 ctermbg=179
-" hi User2 cterm=None ctermfg=214 ctermbg=242
-" hi User3 cterm=None ctermfg=251 ctermbg=240
-" hi User4 cterm=bold ctermfg=169 ctermbg=239
-" hi User5 cterm=None ctermfg=208 ctermbg=238
-" hi User6 cterm=None ctermfg=246 ctermbg=237
-" hi User7 cterm=None ctermfg=250 ctermbg=238
-" hi User8 cterm=None ctermfg=249 ctermbg=240
-" 
-" set statusline+=%4*\ %F\ %* 
-" hi User4 cterm=bold ctermfg=169 ctermbg=239
-" colorscheme nova
+" Autoformat
+nnoremap <F6> :Autoformat<CR>
+let g:autoformat_autoindent = 0
+let g:autoformat_retab = 0
+let g:autoformat_remove_trailing_spaces = 0
