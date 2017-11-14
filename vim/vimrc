@@ -54,25 +54,31 @@ Plugin 'ekalinin/Dockerfile.vim'
 " Autoformat
 Plugin 'Chiel92/vim-autoformat'
 
-" Line style
-" Plugin'liuchengxu/eleline.vim'
-
 " vim-airline
 Plugin 'vim-airline/vim-airline'
 Plugin 'vim-airline/vim-airline-themes'
+
+" vim-taglist
+Plugin 'vim-scripts/taglist.vim'
 
 call vundle#end()
 
 " vim-airline
 let g:airline#extensions#tabline#enabled = 1
-let g:airline#extensions#tabline#left_sep = ' '
-"let g:airline#extensions#tabline#left_alt_sep = '|'
+let g:airline#extensions#tabline#left_sep = ''
+let g:airline#extensions#tabline#left_alt_sep = ''
 let g:airline_theme='papercolor'
 " show absolute file path in status line
 let g:airline_section_c = '%<%F%m %#__accent_red#%{airline#util#wrap(airline#parts#readonly(),0)}%#__restore__#'
 " show tab number in tab line
 let g:airline#extensions#tabline#tab_nr_type = 1
 let g:airline_powerline_fonts = 1
+let g:airline#extensions#tabline#show_tab_nr = 1
+let g:airline#extensions#tabline#formatter = 'default'
+let g:airline#extensions#tabline#buffer_nr_show = 0
+let g:airline#extensions#tabline#fnametruncate = 16
+let g:airline#extensions#tabline#fnamecollapse = 2
+let g:airline#extensions#tabline#buffer_idx_mode = 1
 
 if !exists('g:airline_symbols')
   let g:airline_symbols = {}
@@ -93,7 +99,9 @@ let g:airline_symbols.whitespace = 'Ξ'
 let g:airline_detect_modified = 1
 let g:airline_detect_paste = 1
 
+let g:lightline = { 'colorscheme': 'PaperColor' }
 set laststatus=2
+
 " set guifont=Source\ Code\ Pro\ for\ Powerline:h12
 set noshowmode
 
@@ -109,12 +117,17 @@ let mapleader=" "
 map <leader>g  :YcmCompleter GoToDefinitionElseDeclaration<CR>
 "
 call togglebg#map("<F5>")
-"colorscheme space-vim-dark
+"color NeoSolarized
+"set background=dark
 set t_Co=256
-"set guifont=YaHeiConsolas:h11
+set guifont=YaHeiConsolas:h11
 set termguicolors
+let g:neosolarized_contrast = "normal"
+let g:neosolarized_visibility = "normal"
+let g:neosolarized_bold = 1
+let g:neosolarized_underline = 1
+let g:neosolarized_italic = 0
 
-let NERDTreeIgnore=['\.pyc$', '\~$'] "ignore files in NERDTree
 
 set list lcs=tab:\|\
 
@@ -201,6 +214,20 @@ set clipboard=unnamed
 " NERDTree config
 map <F2> :NERDTreeToggle<CR>
 autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTreeType") &&b:NERDTreeType == "primary") | q | endif
+let NERDTreeIgnore=['\.pyc$', '\~$', '\.swp']
+let NERDTreeShowBookmarks=1
+let g:nerdtree_tabs_open_on_console_startup=1
+let g:NERDTreeIndicatorMapCustom = {
+    \ "Modified"  : "✹",
+    \ "Staged"    : "✚",
+    \ "Untracked" : "✭",
+    \ "Renamed"   : "➜",
+    \ "Unmerged"  : "═",
+    \ "Deleted"   : "✖",
+    \ "Dirty"     : "✗",
+    \ "Clean"     : "✔︎",
+    \ "Unknown"   : "?"
+    \ }
 
 " If you copy the code,it will make the code retain the original indentation
 " 如果你复制代码时，它将使代码保持原始缩进
@@ -272,3 +299,10 @@ let g:formatter_yapf_style = 'pep8'
 let g:autoformat_autoindent = 0
 let g:autoformat_retab = 0
 let g:autoformat_remove_trailing_spaces = 0
+
+" Taglist
+let Tlist_Show_One_File=1    "只显示当前文件的tags
+let Tlist_WinWidth=40        "设置taglist宽度
+let Tlist_Exit_OnlyWindow=1  "tagList窗口是最后一个窗口，则退出Vim
+let Tlist_Use_Right_Window=1 "在Vim窗口右侧显示taglist窗口
+
