@@ -9,6 +9,7 @@ call vundle#begin()
 Plugin 'VundleVim/Vundle.vim'
 "git interface
 Plugin 'tpope/vim-fugitive'
+Plugin 'zivyangll/git-blame.vim'
 "filesystem
 Plugin 'scrooloose/nerdtree'
 Plugin 'jistr/vim-nerdtree-tabs'
@@ -76,9 +77,12 @@ Plugin 'ryanoasis/vim-devicons'
 Plugin 'godlygeek/tabular'
 
 " Asynchronous Lint Engine
-Plugin 'w0rp/ale'
+" Plugin 'w0rp/ale'
 
 Plugin 'sillybun/vim-repl'
+
+" A Personal Wiki For Vim
+Plugin 'vimwiki/vimwiki'
 
 call vundle#end()
 
@@ -244,7 +248,6 @@ autocmd FileType haskell,puppet,ruby,yml setlocal expandtab shiftwidth=2 tabstop
 " system clipboard
 set clipboard=unnamed
 
-
 " NERDTree config
 map <F2> :NERDTreeToggle<CR>
 autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTreeType") &&b:NERDTreeType == "primary") | q | endif
@@ -288,11 +291,9 @@ elseif &filetype == 'java'
 elseif &filetype == 'sh'
 	:!time bash %
 elseif &filetype == 'python'
-	exec "!time python %"
-elseif &filetype == 'python3'
-	exec "!time python3 %"
+	exec "!time /usr/bin/env python3 %"
 elseif &filetype == 'go'
-"	exec "!go build %<"
+	exec "!go build %<"
 	exec "!time go run %"
 elseif &filetype == 'mkd'
 	exec "!~/.vim/markdown.pl % > %.html &"
@@ -314,6 +315,10 @@ au FileType python let b:delimitMate_nesting_quotes = ['"']
 " python-mode config
 let g:pymode_intent = 1 "使用缩进风格为pep8
 let g:pymode_folding = 0 "关闭代码折叠功能
+
+"python3
+let g:syntastic_python_python_exec = '/usr/bin/python3'
+let g:syntastic_python_checkers = ['flake8']
 
 
 if has("autocmd")  " 打开时光标放在上次退出时的位置
@@ -394,22 +399,41 @@ autocmd FileType python noremap <buffer> <F8> :call Autopep8()<CR>
 let autosave=0
 
 " ale
-let g:ale_sign_error = '✗'
-let g:ale_sign_warning = '⚡'
-
-autocmd FileType python noremap <buffer> <F7> :ALEFix<CR>
-
-let g:ale_fixers = {
-    \ 'python': ['add_blank_lines_for_python_control_statements','autopep8','isort','yapf','remove_trailing_lines','trim_whitespace']
-    \ }
+" let g:ale_sign_error = '✗'
+" let g:ale_sign_warning = '⚡'
+"
+" autocmd FileType python noremap <buffer> <F7> :ALEFix<CR>
+"
+" let g:ale_fixers = {
+"     \ 'python': ['add_blank_lines_for_python_control_statements','autopep8','isort','yapf','remove_trailing_lines','trim_whitespace']
+"     \ }
 
 " repl
-autocmd Filetype python nnoremap <leader>r :REPLToggle<Cr>
+" autocmd Filetype python nnoremap <leader>r :REPLToggle<Cr>
 
-let g:rep_row_width = 10            " 窗口宽度
-let g:sendtorepl_invoke_key = 'ww'  " 传送代码快捷键，默认ww
-let g:repl_at_top = 0               " 0标识出现在下方，1标识出现在上方
-let g:repl_stayatrepl_when_open = 0 " 打开REPL时是回到源文件 (1) 还是停留在REPL窗口中 (0)
+" let g:rep_row_width = 10            " 窗口宽度
+" let g:sendtorepl_invoke_key = 'ww'  " 传送代码快捷键，默认ww
+" let g:repl_at_top = 0               " 0标识出现在下方，1标识出现在上方
+" let g:repl_stayatrepl_when_open = 0 " 打开REPL时是回到源文件 (1) 还是停留在REPL窗口中 (0)
 
 " auto load vimrc
 autocmd BufWritePost $MYVIMRC source $MYVIMRC
+
+" git blame
+nmap <Leader>c :<C-u>call gitblame#echo()<CR>
+
+let mapleader = ","  " map leader键设置
+
+" vimwiki
+let g:vimwiki_menu = '' " 不在菜单栏显示Vimwiki
+let g:vimwiki_diary_months = {
+    \ 1: '一月', 2: '二月', 3: '三月', 4: '四月', 5: '五月', 6: '六月',
+    \ 7: '七月', 8: '八月', 9: '九月', 10: '十月', 11: '十一月', 12: '十二月'
+    \ }
+let develop_notes = {} " 个人开发笔记
+let develop_notes.path = '~/test/test/develop-notes' " 笔记路径
+let develop_notes.syntax = 'markdown'
+let develop_notes.ext = '.md'
+
+let g:vimwiki_list = [develop_notes]
+let g:vimwiki_ext2syntax = {'.md': 'markdown', '.markdown': 'markdown', '.mdown': 'markdown'}
