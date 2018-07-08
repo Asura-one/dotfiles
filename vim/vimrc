@@ -350,6 +350,18 @@ let Tlist_Exit_OnlyWindow=1  "tagList窗口是最后一个窗口，则退出Vim
 let Tlist_Use_Right_Window=1 "在Vim窗口右侧显示taglist窗口
 map <F5> :TlistToggle<CR>
 
+
+let tlist_vimwiki_settings = 'wiki;h:Headers'
+let tlist_confluencewiki_settings = 'confluencewiki;h:Headers'
+let tlist_markdown_settings = 'markdown;h:Headers'
+let tlist_textile_settings = 'textile;h:Headers'
+let tlist_html_settings = 'html;h:Headers;o:Objects(ID);c:Classes'
+let tlist_xhtml_settings = 'html;h:Headers;o:Objects(ID);c:Classes'
+let tlist_velocity_settings = 'html;h:Headers;o:Objects(ID);c:Classes'
+let tlist_css_settings = 'css;c:Classes;o:Objects(ID);t:Tags(Elements)'
+let tlist_javascript_settings = 'javascript;f:Functions;c:Classes;o:Objects'
+let tlist_json_settings = 'json;o:Objects'
+
 " indentLine
 let g:indentLine_char='|'
 let g:indentLine_enabled = 1
@@ -430,6 +442,14 @@ let g:vimwiki_diary_months = {
     \ 1: '一月', 2: '二月', 3: '三月', 4: '四月', 5: '五月', 6: '六月',
     \ 7: '七月', 8: '八月', 9: '九月', 10: '十月', 11: '十一月', 12: '十二月'
     \ }
+let g:vimwiki_use_mouse = 1
+let g:vimwiki_camel_case = 0
+let g:vimwiki_CJK_length = 1
+let g:vimwiki_use_calendar = 0
+let g:vimwiki_timestamp_format='%Y年%m月%d日 %H:%M:%S'
+let g:vimwiki_user_htmls = "search.html,404.html"
+
+
 let develop_notes = {} " 个人开发笔记
 let develop_notes.path = '~/test/test/develop-notes' " 笔记路径
 let develop_notes.syntax = 'markdown'
