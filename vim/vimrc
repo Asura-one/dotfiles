@@ -1,7 +1,15 @@
+"if has('python3')
+"endif
+" write with sudo
+cabbrev w!! w !sudo tee %
+
 "vundle
 set nocompatible
 filetype off
-filetype plugin on
+filetype plugin indent on    " enables filetype detection
+"filetype plugin on
+"call pathogen#infect()
+"call pathogen#helptags()
 
 set rtp+=~/.vim/bundle/Vundle.vim
 call vundle#begin()
@@ -34,10 +42,10 @@ Plugin 'tell-k/vim-autopep8'
 Plugin 'Yggdroot/indentLine'
 
 "auto-completion stuff
-Plugin 'klen/python-mode'
+"Plugin 'python-mode/python-mode'
 Plugin 'Raimondi/delimitMate'
 Plugin 'Valloric/YouCompleteMe'
-Plugin 'klen/rope-vim'
+"Plugin 'klen/rope-vim'
 "Plugin 'davidhalter/jedi-vim'
 Plugin 'ervandew/supertab'
 "code folding
@@ -77,14 +85,20 @@ Plugin 'ryanoasis/vim-devicons'
 Plugin 'godlygeek/tabular'
 
 " Asynchronous Lint Engine
-" Plugin 'w0rp/ale'
+Plugin 'w0rp/ale'
 
 Plugin 'sillybun/vim-repl'
 
 " A Personal Wiki For Vim
 Plugin 'vimwiki/vimwiki'
 
+"Plugin 'imbbill/undotree'
+
 call vundle#end()
+
+" /* base */
+" 显示正在输入的命令
+set showcmd
 
 " vim-airline
 let g:airline#extensions#tabline#enabled = 1
@@ -92,7 +106,7 @@ let g:airline#extensions#tabline#left_sep = ''
 let g:airline#extensions#tabline#left_alt_sep = ''
 let g:airline_theme='papercolor'
 " show absolute file path in status line
-let g:airline_section_c = '%<%F%m %#__accent_red#%{airline#util#wrap(airline#parts#readonly(),0)}%#__restore__#'
+let g:airline_section_c = '%<%F%m %#__accent_red#%{airline#util#wrap(airline#parts#readonly(),0)}%#__restore__#%{ALEGetStatusLine()}'
 " show tab number in tab line
 let g:airline#extensions#tabline#tab_nr_type = 1
 let g:airline_powerline_fonts = 1
@@ -135,7 +149,6 @@ let g:nord_uniform_diff_background = 1
 set noshowmode
 
 
-filetype plugin indent on    " enables filetype detection
 let g:SimpylFold_docstring_preview = 1
 
 " YouCompleteMe
@@ -169,6 +182,12 @@ let g:neosolarized_italic = 0
 
 "I don't like swap files
 set noswapfile
+
+" 自动加载文件
+set autoread
+
+" 自动保存文件
+set autowriteall
 
 "turn on numbering
 set number
@@ -232,26 +251,61 @@ autocmd FileType python set autoindent
 " make backspaces more powerfull
 set backspace=indent,eol,start
 
+" for different file types
+augroup filetype_formats
+  au!
 
-"Folding based on indentation:
-"autocmd FileType python set foldmethod=indent
-"use space to open folds
-"nnoremap <space> za
-"----------Stop python PEP 8 stuff--------------
+  au FileType help setlocal nu
 
-"js stuff"
-autocmd FileType javascript setlocal shiftwidth=2 tabstop=2
+  au BufNewFile,BufRead *.{vim,vimrc}
+        \ setlocal foldmethod=marker |
+        \ setlocal tabstop=2         |
+        \ setlocal softtabstop=2     |
+        \ setlocal shiftwidth=2
 
-"haskell,puppet,ruby,yml stuff"
-autocmd FileType haskell,puppet,ruby,yml setlocal expandtab shiftwidth=2 tabstop=2
+  au BufNewFile,BufRead *.py
+       \ setlocal autoindent      |
+       \ setlocal nowrap          |
+       \ setlocal sidescroll=5    |
+       \ let g:python_highlight_all = 1 |
+       \ setlocal complete+=t |
+       \ setlocal formatoptions-=t |
+       \ setlocal nowrap |
+       \ setlocal commentstring=#%s |
+       \ setlocal define=^\s*\\(def\\\\|class\\)
+       " \ set listchars+=precedes:<,extends:>
+       " \ set textwidth=79 |
+
+  au BufNewFile,BufRead *.js,*.html,*.css,*.yml
+      \ setlocal tabstop=2     |
+      \ setlocal softtabstop=2 |
+      \ setlocal shiftwidth=2
+
+  " autocmd BufNewFile,BufRead *.{md,mkd,mkdn,mark*}
+  "   \ set filetype=markdown
+
+  " useless whitespaces
+  au BufRead,BufNewFile *.py,*.pyw,*.c,*.h,*.{vim,vimrc}
+      \ highlight BadWhitespace ctermbg=red guibg=darkred |
+      \ match BadWhitespace /\s\+$/
+
+augroup END
 
 " system clipboard
 set clipboard=unnamed
 
 " NERDTree config
 map <F2> :NERDTreeToggle<CR>
-autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTreeType") &&b:NERDTreeType == "primary") | q | endif
-let NERDTreeIgnore=['\.pyc$', '\~$', '\.swp']
+
+augroup nerd_behaviours
+  au!
+  autocmd StdinReadPre * let s:std_in = 1
+  autocmd VimEnter * if argc() == 1 && isdirectory(argv()[0]) && !exists("s:std_in") | exe 'NERDTree' argv()[0] | wincmd p | ene | endif
+  autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTree") && b:NERDTree.isTabTree() && b:NERDTreeType == "primary") | q | endif
+  autocmd tableave * if exists('g:loaded_nerd_tree') | execute 'NERDTreeClose' | endif
+augroup END
+
+let NERDTreeIgnore=['\.pyc$', '\~$', '\.swp', '__pycache__[[dir]]']
 let NERDTreeShowBookmarks=1
 let g:nerdtree_tabs_open_on_console_startup=0
 let g:NERDTreeIndicatorMapCustom = {
@@ -266,8 +320,10 @@ let g:NERDTreeIndicatorMapCustom = {
     \ "Unknown"   : "?"
     \ }
 let NERDTreeCascadeSingleChildDir=0
+let g:NERDTreeNaturalSort = 1
+let g:NERDTreeShowLineNumbers = 0
+let g:NERDTreeShowHidden = 1
 
-" If you copy the code,it will make the code retain the original indentation
 " 如果你复制代码时，它将使代码保持原始缩进
 set pastetoggle=<F3>
 
@@ -304,7 +360,6 @@ endfunc
 
 
 
-
 " for python docstring
 " Raimondi/delimitMate config
 au FileType python let b:delimitMate_nesting_quotes = ['"']
@@ -313,8 +368,21 @@ au FileType python let b:delimitMate_nesting_quotes = ['"']
 
 
 " python-mode config
-let g:pymode_intent = 1 "使用缩进风格为pep8
-let g:pymode_folding = 0 "关闭代码折叠功能
+"let g:pymode_intent = 1 "使用缩进风格为pep8
+"let g:pymode_folding = 0 "关闭代码折叠功能
+"let g:pymode_trim_whitespaces = 1 "保存文件时自动删除无用空格
+"let g:pymode_virtualenv = 1 "自动检测并启用virtualenv
+"let g:pymode_lint_on_fly = 0 "编辑时进行检查
+"let g:pymode_lint_checkers = ['pyflakes', 'pep8']
+"let g:pymode_lint_cwindow = 0 "发现错误时不自动打开QuickFix窗口
+"let g:pymode_lint_signs = 1 "启用侧边栏显示python-mode相关的标志
+"let g:pymode_lint_todo_symbol = 'WW'
+"let g:pymode_lint_comment_symbol = 'CC'
+"let g:pymode_lint_visual_symbol = 'RR'
+"let g:pymode_lint_error_symbol = 'EE'
+"let g:pymode_lint_info_symbol = 'II'
+"let g:pymode_lint_pyflakes_symbol = 'FF'
+"let g:pymode_python = 'python3'
 
 "python3
 let g:syntastic_python_python_exec = '/usr/bin/python3'
@@ -411,14 +479,30 @@ autocmd FileType python noremap <buffer> <F8> :call Autopep8()<CR>
 let autosave=0
 
 " ale
-" let g:ale_sign_error = '✗'
-" let g:ale_sign_warning = '⚡'
-"
-" autocmd FileType python noremap <buffer> <F7> :ALEFix<CR>
-"
-" let g:ale_fixers = {
-"     \ 'python': ['add_blank_lines_for_python_control_statements','autopep8','isort','yapf','remove_trailing_lines','trim_whitespace']
-"     \ }
+" 显示侧边栏
+let g:ale_sign_column_always = 1
+let g:ale_set_highlights = 0
+let g:ale_fix_on_save = 1
+" 自定义图标
+let g:ale_sign_error = '✗'
+let g:ale_sign_warning = '⚡'
+
+autocmd FileType python noremap <buffer> <F7> :ALEFix<CR>
+
+let g:ale_fixers = {
+    \ 'python': ['add_blank_lines_for_python_control_statements','autopep8','isort','yapf','remove_trailing_lines','trim_whitespace']
+    \ }
+"普通模式下，sp前往上一个错误或警告，sn前往下一个错误或警告
+nmap sp <Plug>(ale_previous_wrap)
+nmap sn <Plug>(ale_next_wrap)
+"<Leader>d 查看错误或警告的详细信息
+nmap <Leader>d :ALEDetail<CR>
+"改变状态栏信息格式
+let g:ale_statusline_format = ['⨉ %d', '⚠ %d', '⬥ ok']
+"改变命令行消息
+let g:ale_echo_msg_error_str = 'E'
+let g:ale_echo_msg_warning_str = 'W'
+let g:ale_echo_msg_format = '[%linter%] %s [%severity%]'
 
 " repl
 " autocmd Filetype python nnoremap <leader>r :REPLToggle<Cr>
@@ -434,7 +518,7 @@ autocmd BufWritePost $MYVIMRC source $MYVIMRC
 " git blame
 nmap <Leader>c :<C-u>call gitblame#echo()<CR>
 
-let mapleader = ","  " map leader键设置
+"let mapleader = ","  " map leader键设置
 
 " vimwiki
 let g:vimwiki_menu = '' " 不在菜单栏显示Vimwiki
@@ -457,3 +541,6 @@ let develop_notes.ext = '.md'
 
 let g:vimwiki_list = [develop_notes]
 let g:vimwiki_ext2syntax = {'.md': 'markdown', '.markdown': 'markdown', '.mdown': 'markdown'}
+
+" 刷新文件
+map r :e<CR>
