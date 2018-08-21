@@ -1,5 +1,5 @@
-"if has('python3')
-"endif
+if has('python')
+endif
 " write with sudo
 cabbrev w!! w !sudo tee %
 
@@ -7,9 +7,6 @@ cabbrev w!! w !sudo tee %
 set nocompatible
 filetype off
 filetype plugin indent on    " enables filetype detection
-"filetype plugin on
-"call pathogen#infect()
-"call pathogen#helptags()
 
 set rtp+=~/.vim/bundle/Vundle.vim
 call vundle#begin()
@@ -33,7 +30,8 @@ Plugin 'nelstrom/vim-markdown-preview'
 Plugin 'nvie/vim-flake8'
 Plugin 'vim-scripts/Pydiction'
 Plugin 'vim-scripts/indentpython.vim'
-"Plugin 'scrooloose/syntastic'
+" 添加python类型注释
+Plugin 'sillybun/vim-autodoc'
 
 "python autopep8
 Plugin 'tell-k/vim-autopep8'
@@ -42,12 +40,8 @@ Plugin 'tell-k/vim-autopep8'
 Plugin 'Yggdroot/indentLine'
 
 "auto-completion stuff
-"Plugin 'python-mode/python-mode'
 Plugin 'Raimondi/delimitMate'
 Plugin 'Valloric/YouCompleteMe'
-"Plugin 'klen/rope-vim'
-"Plugin 'davidhalter/jedi-vim'
-Plugin 'ervandew/supertab'
 "code folding
 "Plugin 'tmhedberg/SimpylFold'
 
@@ -58,7 +52,8 @@ Plugin 'ervandew/supertab'
 " Plugin 'tyrannicaltoucan/vim-deep-space'
 " Plugin 'trevordmiller/nova-vim'
 " Colors Nord
-" Plugin 'arcticicestudio/nord-vim'
+Plugin 'arcticicestudio/nord-vim'
+Plugin 'liuchengxu/space-vim-dark'
 
 " codi.vim
 " The interactive scratchpad for hackers
@@ -67,9 +62,6 @@ Plugin 'metakirby5/codi.vim'
 
 " Vim for Dockerfile
 Plugin 'ekalinin/Dockerfile.vim'
-
-" Autoformat
-" Plugin 'Chiel92/vim-autoformat'
 
 " vim-airline
 Plugin 'vim-airline/vim-airline'
@@ -85,16 +77,20 @@ Plugin 'ryanoasis/vim-devicons'
 Plugin 'godlygeek/tabular'
 
 " Asynchronous Lint Engine
+Plugin 'skywind3000/asyncrun.vim'
 Plugin 'w0rp/ale'
 
-Plugin 'sillybun/vim-repl'
+"Plugin 'sillybun/vim-repl'
 
 " A Personal Wiki For Vim
 Plugin 'vimwiki/vimwiki'
 
-"Plugin 'imbbill/undotree'
+Plugin 'mbbill/undotree'
 
 call vundle#end()
+
+"custom keys
+let mapleader=" "
 
 " /* base */
 " 显示正在输入的命令
@@ -106,9 +102,11 @@ let g:airline#extensions#tabline#left_sep = ''
 let g:airline#extensions#tabline#left_alt_sep = ''
 let g:airline_theme='papercolor'
 " show absolute file path in status line
-let g:airline_section_c = '%<%F%m %#__accent_red#%{airline#util#wrap(airline#parts#readonly(),0)}%#__restore__#%{ALEGetStatusLine()}'
+"let g:airline_section_c = '%<%F%m %#__accent_red#%{airline#util#wrap(airline#parts#readonly(),0)}%#__restore__#%{ALEGetStatusLine()}'
+let g:airline_section_c = '%<%F%m %#__accent_red#%{airline#util#wrap(airline#parts#readonly(),0)}%#__restore__#'
 " show tab number in tab line
 let g:airline#extensions#tabline#tab_nr_type = 1
+let g:airline#extensions#ale#enabled = 1
 let g:airline_powerline_fonts = 1
 let g:airline#extensions#tabline#show_tab_nr = 1
 let g:airline#extensions#tabline#formatter = 'default'
@@ -153,32 +151,47 @@ let g:SimpylFold_docstring_preview = 1
 
 " YouCompleteMe
 "autocomplete
-let g:ycm_autoclose_preview_window_after_completion=1
-let g:ycm_seed_indetifiers_with_syntax=1
+"let g:ycm_autoclose_preview_window_after_completion=1
+let g:ycm_add_preview_to_completeopt = 0
+let g:ycm_collect_identifiers_from_comments_and_strings = 1
+let g:ycm_collect_identifiers_from_tags_files = 1
 let g:ycm_complete_in_comments=1
-let g:ycm_collect_indetifiers_from_comments_and_strings = 0
-let g:ycm_server_python_interpreter='/usr/bin/python'
+let g:ycm_complete_in_strings = 1
+let g:ycm_global_ycm_extra_conf = '~/.vim/.ycm_extra_conf.py'
+let g:ycm_min_num_identifier_candidate_chars = 2
+let g:ycm_python_binary_path = 'python3'
+let g:ycm_seed_indetifiers_with_syntax=1
+let g:ycm_server_log_level = 'info'
+let g:ycm_server_python_interpreter='/usr/bin/python3'
+let g:ycm_show_diagnostcs_ui = 0
+let g:ycm_confirm_extra_conf = 0
+set completeopt=longest,menu,menuone
+noremap <c-z> <NOP>
+let g:ycm_key_invoke_completion= '<c-z>'
 autocmd InsertLeave * if pumvisible() == 0|pclose|endif
-"inoremap <expr> <CR>       pumvisible() ? '<C-y>' : '\<CR>'
-"custom keys
-let mapleader=" "
+inoremap <expr> <CR>       pumvisible() ? '<C-y>' : '\<CR>'
 map <leader>g  :YcmCompleter GoToDefinitionElseDeclaration<CR>
+let g:ycm_semantic_triggers =  {
+			\ 'c,cpp,python,java,go,erlang,perl': ['re!\w{2}'],
+			\ 'cs,lua,javascript': ['re!\w{2}'],
+			\ }
+let g:ycm_filetype_whitelist = {
+			\ 'c':1,
+			\ 'cpp':1,
+			\ 'php':1,
+			\ 'python':1,
+			\ 'sh':1,
+			\ 'yaml':1,
+			\ 'zsh':1,
+			\ }
 
-" call togglebg#map("<F5>")
-" color NeoSolarized
-"set background=dark
 set t_Co=256
-"set guifont=YaHei\Consolas\Hybrid\ h11
-" set guifont=YaHei\Consolas\ h11
-" set termguicolors
-let g:neosolarized_contrast = "normal"
-let g:neosolarized_visibility = "normal"
-let g:neosolarized_bold = 1
-let g:neosolarized_underline = 1
-let g:neosolarized_italic = 0
-
-
-"set list lcs=tab:\|\
+"set termguicolors
+"let g:neosolarized_contrast = "normal"
+"let g:neosolarized_visibility = "normal"
+"let g:neosolarized_bold = 1
+"let g:neosolarized_underline = 1
+"let g:neosolarized_italic = 0
 
 "I don't like swap files
 set noswapfile
@@ -193,21 +206,22 @@ set autowriteall
 set number
 
 "python with virtualenv support
-" py << EOF
-" import os.path
-" import sys
-" import vim
-" if 'VIRTUA_ENV' in os.environ:
-"   project_base_dir = os.environ['VIRTUAL_ENV']
-"   sys.path.insert(0, project_base_dir)
-"   activate_this = os.path.join(project_base_dir,'bin/activate_this.py')
-"   #  execfile(activate_this, dict(__file__=activate_this))../
-"   execfile(activate_this, dict(__file__=activate_this))
-" EOF
+py << EOF
+import os.path
+import sys
+import vim
+if 'VIRTUA_ENV' in os.environ:
+  project_base_dir = os.environ['VIRTUAL_ENV']
+  sys.path.insert(0, project_base_dir)
+  activate_this = os.path.join(project_base_dir,'bin/activate_this.py')
+  #  execfile(activate_this, dict(__file__=activate_this))../
+  execfile(activate_this, dict(__file__=activate_this))
+EOF
 
 "it would be nice to set tag files by the active virtualenv here
 ":set tags=~/mytags "tags for ctags and taglist
 "omnicomplete
+"autocmd FileType python set omnifunc=jedi#completions
 autocmd FileType python set omnifunc=pythoncomplete#Complete
 
 hi pythonSelf  ctermfg=68  guifg=#5f87d7 cterm=bold gui=bold
@@ -274,7 +288,7 @@ augroup filetype_formats
        \ setlocal commentstring=#%s |
        \ setlocal define=^\s*\\(def\\\\|class\\)
        " \ set listchars+=precedes:<,extends:>
-       " \ set textwidth=79 |
+       \ set textwidth=79 |
 
   au BufNewFile,BufRead *.js,*.html,*.css,*.yml
       \ setlocal tabstop=2     |
@@ -333,30 +347,41 @@ set pastetoggle=<F3>
 "Quickly Run
 """""""""""""""""""""""""""""""""""""
 map <F4> :call CompileRunGcc()<CR>
-fun! CompileRunGcc()
-	exec "w"
-if &filetype == 'C'
-	exec "!g++ % -o %<"
-	exec "!time ./%<"
-elseif &filetype == 'cpp'
-	exec "!g++ %  -o %<"
-	exec "!time ./%<"
-elseif &filetype == 'java'
-	exec "!java %"
-	exec "!time java %<"
-elseif &filetype == 'sh'
-	:!time bash %
-elseif &filetype == 'python'
-	exec "!time /usr/bin/env python3 %"
-elseif &filetype == 'go'
-	exec "!go build %<"
-	exec "!time go run %"
-elseif &filetype == 'mkd'
-	exec "!~/.vim/markdown.pl % > %.html &"
-	exec "!chromium %.html &"
-endif
+func! CompileRunGcc()
+	exec 'w'
+	if &filetype ==# 'c'
+		exec 'gcc -o3 % -o %<'
+		exec '!time ./%<'
+	elseif &filetype ==# 'cpp'
+		exec '!g++ -o3 % -o %<'
+		exec '!time ./%<'
+	elseif &filetype ==# 'java'
+		exec '!javac %'
+		exec '!time java %<'
+	elseif &filetype ==# 'sh'
+		:!time bash %
+	elseif &filetype ==# 'python'
+		if search('@profile')
+			exec 'AsyncRun kernprof -l -v %'
+			exec 'copen'
+			exec 'wincmd p'
+		elseif search('set_trace()')
+			exec '!python3 %'
+		else
+			exec 'AsyncRun -raw python3 %'
+			exec 'copen'
+			exec 'wincmd p'
+		endif
+	elseif &filetype ==# 'html'
+		exec '!firefox % &'
+	elseif &filetype ==# 'go'
+		' exec '!go build %<'
+		exec '!time go run %'
+	elseif &filetype ==# 'mkd'
+		exec '!~/.vim/markdown.pl % > %.html &'
+		exec '!firefox %.html &'
+	endif
 endfunc
-
 
 
 
@@ -365,28 +390,6 @@ endfunc
 au FileType python let b:delimitMate_nesting_quotes = ['"']
 " 关闭某些类型文件的自动补全
 " au FileType mail let b:delimitMate_autoclose = 0
-
-
-" python-mode config
-"let g:pymode_intent = 1 "使用缩进风格为pep8
-"let g:pymode_folding = 0 "关闭代码折叠功能
-"let g:pymode_trim_whitespaces = 1 "保存文件时自动删除无用空格
-"let g:pymode_virtualenv = 1 "自动检测并启用virtualenv
-"let g:pymode_lint_on_fly = 0 "编辑时进行检查
-"let g:pymode_lint_checkers = ['pyflakes', 'pep8']
-"let g:pymode_lint_cwindow = 0 "发现错误时不自动打开QuickFix窗口
-"let g:pymode_lint_signs = 1 "启用侧边栏显示python-mode相关的标志
-"let g:pymode_lint_todo_symbol = 'WW'
-"let g:pymode_lint_comment_symbol = 'CC'
-"let g:pymode_lint_visual_symbol = 'RR'
-"let g:pymode_lint_error_symbol = 'EE'
-"let g:pymode_lint_info_symbol = 'II'
-"let g:pymode_lint_pyflakes_symbol = 'FF'
-"let g:pymode_python = 'python3'
-
-"python3
-let g:syntastic_python_python_exec = '/usr/bin/python3'
-let g:syntastic_python_checkers = ['flake8']
 
 
 if has("autocmd")  " 打开时光标放在上次退出时的位置
@@ -401,15 +404,6 @@ set smartcase 	" 搜索时，智能大小写
 set ignorecase 	" 搜索时，忽略大小写
 set incsearch 	" incremental search
 set autochdir 	" 打开文件时，自动 cd 到文件所在目录
-
-
-" Autoformat
-" nnoremap <F6> :Autoformat<CR>
-" let g:formatter_yapf_style = 'pep8'
-" let g:autoformat_autoindent = 0
-" let g:autoformat_retab = 0
-" let g:autoformat_remove_trailing_spaces = 0
-" let g:autoformat_verbosemode=1
 
 " Taglist
 " let Tlist_Show_One_File=1    "只显示当前文件的tags
@@ -450,19 +444,19 @@ endfunction
 autocmd BufWritePre * call RemoveTrailingWhitespace()
 
 " python
-" function HeadePython()
-" 	call setline(1, "#!/usr/bin/env python")
-" 	call append(1, "# -*- coding: utf-8 -*-")
-" 	call append(2, "")
-" 	call append(3, '"""')
-" 	call append(4, "Description: ")
-" 	call append(5, "Author: Asura")
-" 	call append(6, "E-mail: zishuheimixhou@163.com")
-" 	call append(7, "Date: " . strftime("%Y-%m-%d %H:%M:%S"))
-" 	call append(8, "Python release: 2.7")
-" 	call append(9, '"""')
-" endfunction
-" autocmd bufnewfile *.py call HeadePython()
+"function HeadePython()
+"	call setline(1, "#!/usr/bin/env python3")
+"	call append(1, "# -*- coding: utf-8 -*-")
+"	call append(2, "")
+"	call append(3, '"""')
+"	call append(4, "Description: ")
+"	call append(5, "Author: Asura")
+"	call append(6, "E-mail: zishuheimixhou@163.com")
+"	call append(7, "Date: " . strftime("%Y-%m-%d %H:%M:%S"))
+"	call append(8, "Python release: 2.7")
+"	call append(9, '"""')
+"endfunction
+"autocmd bufnewfile *.py call HeadePython()
 
 " vim-devicons configuration
 let g:webdevicons_enable=1
@@ -498,19 +492,40 @@ nmap sn <Plug>(ale_next_wrap)
 "<Leader>d 查看错误或警告的详细信息
 nmap <Leader>d :ALEDetail<CR>
 "改变状态栏信息格式
-let g:ale_statusline_format = ['⨉ %d', '⚠ %d', '⬥ ok']
+"let g:ale_statusline_format = ['⨉ %d', '⚠ %d', '⬥ ok']
 "改变命令行消息
 let g:ale_echo_msg_error_str = 'E'
 let g:ale_echo_msg_warning_str = 'W'
 let g:ale_echo_msg_format = '[%linter%] %s [%severity%]'
+let g:ale_linters = {
+			\ 'bash':['shellcheck'],
+			\ 'ansible':['ansible-lint'],
+			\ 'dockerfile':['hadolint'],
+			\ 'markdown':['alex'],
+			\ 'python':['flake8'],
+			\ 'vim':['vint'],
+			\ 'yaml':['yamllint'],
+			\}
+let g:ale_lint_on_text_changed = 'normal'
+let g:ale_lint_on_insert_leave = 1
 
 " repl
-" autocmd Filetype python nnoremap <leader>r :REPLToggle<Cr>
-
-" let g:rep_row_width = 10            " 窗口宽度
-" let g:sendtorepl_invoke_key = 'ww'  " 传送代码快捷键，默认ww
-" let g:repl_at_top = 0               " 0标识出现在下方，1标识出现在上方
-" let g:repl_stayatrepl_when_open = 0 " 打开REPL时是回到源文件 (1) 还是停留在REPL窗口中 (0)
+"autocmd Filetype python nnoremap <leader>r :REPLToggle<Cr>
+"
+"let g:rep_row_width = 10            " 窗口宽度
+"let g:sendtorepl_invoke_key = 'ww'  " 传送代码快捷键，默认ww
+"let g:repl_at_top = 0               " 0标识出现在下方，1标识出现在上方
+"let g:repl_stayatrepl_when_open = 0 " 打开REPL时是回到源文件 (1) 还是停留在REPL窗口中 (0)
+"let g:repl_program = {
+"			\ 'python': 'ipython3',
+"			\ 'default': 'zsh',
+"			\}
+"let g:repl_exit_commands = {
+"			\ 'python': 'quit()',
+"			\ 'bash': 'exit',
+"			\ 'zsh': 'exit',
+"			\ 'default': 'exit',
+"			\}
 
 " auto load vimrc
 autocmd BufWritePost $MYVIMRC source $MYVIMRC
@@ -543,4 +558,17 @@ let g:vimwiki_list = [develop_notes]
 let g:vimwiki_ext2syntax = {'.md': 'markdown', '.markdown': 'markdown', '.mdown': 'markdown'}
 
 " 刷新文件
-map r :e<CR>
+map <leader>r :e<CR>
+
+
+" vim-autodoc
+let g:autodoc_display_return_type = 1 " 1表示输出返回值类型，0表示不输出
+let g:autodoc_typehint_style = 'pep484' " 注释风格
+let g:autodoc_display_runtime_info = 0 " 是否统计函数运行信息
+"map <F2> :RecordParameter<CR>
+
+" undotree
+if has("persistent_undo")
+	set undodir=~/.undodir/
+	set undofile
+endif
