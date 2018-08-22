@@ -5,7 +5,6 @@ cabbrev w!! w !sudo tee %
 
 "vundle
 set nocompatible
-filetype off
 filetype plugin indent on    " enables filetype detection
 
 set rtp+=~/.vim/bundle/Vundle.vim
@@ -28,10 +27,9 @@ Plugin 'suan/vim-instant-markdown'
 Plugin 'nelstrom/vim-markdown-preview'
 "python sytax checker
 Plugin 'nvie/vim-flake8'
-Plugin 'vim-scripts/Pydiction'
 Plugin 'vim-scripts/indentpython.vim'
 " 添加python类型注释
-Plugin 'sillybun/vim-autodoc'
+"Plugin 'sillybun/vim-autodoc'
 
 "python autopep8
 Plugin 'tell-k/vim-autopep8'
@@ -87,6 +85,9 @@ Plugin 'vimwiki/vimwiki'
 
 Plugin 'mbbill/undotree'
 
+Plugin 'SirVer/ultisnips'
+Plugin 'honza/vim-snippets'
+
 call vundle#end()
 
 "custom keys
@@ -104,6 +105,8 @@ let g:airline_theme='papercolor'
 " show absolute file path in status line
 "let g:airline_section_c = '%<%F%m %#__accent_red#%{airline#util#wrap(airline#parts#readonly(),0)}%#__restore__#%{ALEGetStatusLine()}'
 let g:airline_section_c = '%<%F%m %#__accent_red#%{airline#util#wrap(airline#parts#readonly(),0)}%#__restore__#'
+let g:asyncrun_status = ''
+let g:airline_section_error = airline#section#create_right(['%{g:asyncrun_status}'])
 " show tab number in tab line
 let g:airline#extensions#tabline#tab_nr_type = 1
 let g:airline#extensions#ale#enabled = 1
@@ -159,17 +162,20 @@ let g:ycm_complete_in_comments=1
 let g:ycm_complete_in_strings = 1
 let g:ycm_global_ycm_extra_conf = '~/.vim/.ycm_extra_conf.py'
 let g:ycm_min_num_identifier_candidate_chars = 2
-let g:ycm_python_binary_path = 'python3'
+let g:ycm_python_binary_path = 'python'
 let g:ycm_seed_indetifiers_with_syntax=1
 let g:ycm_server_log_level = 'info'
-let g:ycm_server_python_interpreter='/usr/bin/python3'
+let g:ycm_server_python_interpreter='/usr/bin/python'
 let g:ycm_show_diagnostcs_ui = 0
 let g:ycm_confirm_extra_conf = 0
+"youcompleteme  默认tab  s-tab 和自动补全冲突
+let g:ycm_key_list_select_completion = ['<Enter>', '<Down>']
+let g:ycm_key_list_previous_completion = ['<S-TAB>', '<Up>']
 set completeopt=longest,menu,menuone
 noremap <c-z> <NOP>
 let g:ycm_key_invoke_completion= '<c-z>'
 autocmd InsertLeave * if pumvisible() == 0|pclose|endif
-inoremap <expr> <CR>       pumvisible() ? '<C-y>' : '\<CR>'
+"inoremap <expr> <CR>       pumvisible() ? '<C-y>' : '\<CR>' "和其他插件有冲突
 map <leader>g  :YcmCompleter GoToDefinitionElseDeclaration<CR>
 let g:ycm_semantic_triggers =  {
 			\ 'c,cpp,python,java,go,erlang,perl': ['re!\w{2}'],
@@ -207,14 +213,11 @@ set number
 
 "python with virtualenv support
 py << EOF
-import os.path
+import os
 import sys
-import vim
-if 'VIRTUA_ENV' in os.environ:
+if 'VIRTUAL_ENV' in os.environ:
   project_base_dir = os.environ['VIRTUAL_ENV']
-  sys.path.insert(0, project_base_dir)
-  activate_this = os.path.join(project_base_dir,'bin/activate_this.py')
-  #  execfile(activate_this, dict(__file__=activate_this))../
+  activate_this = os.path.join(project_base_dir, 'bin/activate_this.py')
   execfile(activate_this, dict(__file__=activate_this))
 EOF
 
@@ -379,7 +382,7 @@ func! CompileRunGcc()
 		exec '!time go run %'
 	elseif &filetype ==# 'mkd'
 		exec '!~/.vim/markdown.pl % > %.html &'
-		exec '!firefox %.html &'
+		exec 'AsyncRun chromium %.html %'
 	endif
 endfunc
 
@@ -476,7 +479,7 @@ let autosave=0
 " 显示侧边栏
 let g:ale_sign_column_always = 1
 let g:ale_set_highlights = 0
-let g:ale_fix_on_save = 1
+let g:ale_fix_on_save = 0
 " 自定义图标
 let g:ale_sign_error = '✗'
 let g:ale_sign_warning = '⚡'
@@ -502,7 +505,7 @@ let g:ale_linters = {
 			\ 'ansible':['ansible-lint'],
 			\ 'dockerfile':['hadolint'],
 			\ 'markdown':['alex'],
-			\ 'python':['flake8'],
+			\ 'python':['yapf'],
 			\ 'vim':['vint'],
 			\ 'yaml':['yamllint'],
 			\}
@@ -562,9 +565,9 @@ map <leader>r :e<CR>
 
 
 " vim-autodoc
-let g:autodoc_display_return_type = 1 " 1表示输出返回值类型，0表示不输出
-let g:autodoc_typehint_style = 'pep484' " 注释风格
-let g:autodoc_display_runtime_info = 0 " 是否统计函数运行信息
+"let g:autodoc_display_return_type = 1 " 1表示输出返回值类型，0表示不输出
+"let g:autodoc_typehint_style = 'pep484' " 注释风格
+"let g:autodoc_display_runtime_info = 0 " 是否统计函数运行信息
 "map <F2> :RecordParameter<CR>
 
 " undotree
@@ -572,3 +575,55 @@ if has("persistent_undo")
 	set undodir=~/.undodir/
 	set undofile
 endif
+
+
+" Is better way to zoom windows in Vim than ZoomWin?
+" Zoom / Restore window.
+function! s:ZoomToggle() abort
+    if exists('t:zoomed') && t:zoomed
+        execute t:zoom_winrestcmd
+        let t:zoomed = 0
+    else
+        let t:zoom_winrestcmd = winrestcmd()
+        resize
+        vertical resize
+        let t:zoomed = 1
+    endif
+endfunction
+command! ZoomToggle call s:ZoomToggle()
+"nnoremap <silent> <Leader>z :ZoomToggle<CR>
+nnoremap <silent> <c-w>z :ZoomToggle<CR>
+
+" UltiSnips
+let g:UltiSnipsExpandTrigger       = "<tab>"
+let g:UltiSnipsJumpForwardTrigger  = "<tab>"
+let g:UltiSnipsJumpBackwardTrigger = "<s-tab>"
+let g:UltiSnipsSnippetDirectories  = ['UltiSnips']
+let g:UltiSnipsSnippetsDir = '~/.vim/UltiSnips'
+" 定义存放代码片段的文件夹 .vim/UltiSnips下，使用自定义和默认的，将会的到全局，有冲突的会提示
+" 进入对应filetype的snippets进行编辑
+map <leader>us :UltiSnipsEdit<CR>
+
+" ctrl+j/k 进行选择
+func! g:JInYCM()
+    if pumvisible()
+        return "\<C-n>"
+    else
+        return "\<c-j>"
+    endif
+endfunction
+
+func! g:KInYCM()
+    if pumvisible()
+        return "\<C-p>"
+    else
+        return "\<c-k>"
+    endif
+endfunction
+inoremap <c-j> <c-r>=g:JInYCM()<cr>
+au BufEnter,BufRead * exec "inoremap <silent> " . g:UltiSnipsJumpBackwordTrigger . " <C-R>=g:KInYCM()<cr>"
+let g:UltiSnipsJumpBackwordTrigger = "<c-k>"
+
+" AsyncRun
+autocmd  QuickFixCmdPost  *  botright  copen  8
+let g:asyncrun_encs = 'gbk'
