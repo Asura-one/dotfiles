@@ -44,19 +44,19 @@ Plugin 'Valloric/YouCompleteMe'
 "Plugin 'tmhedberg/SimpylFold'
 
 "Colors!!!
-" Plugin 'altercation/vim-colors-solarized'
-" Plugin 'jnurmine/Zenburn'
-" Plugin 'dracula/vim'
-" Plugin 'tyrannicaltoucan/vim-deep-space'
-" Plugin 'trevordmiller/nova-vim'
-" Colors Nord
+Plugin 'jnurmine/Zenburn'
 Plugin 'arcticicestudio/nord-vim'
 Plugin 'liuchengxu/space-vim-dark'
+Plugin 'drewtempelmeyer/palenight.vim'
+Plugin 'ayu-theme/ayu-vim'
+Plugin 'rakr/vim-one'
+Plugin 'mhartington/oceanic-next'
+Plugin 'joshdick/onedark.vim'
 
 " codi.vim
 " The interactive scratchpad for hackers
 " This is very cool plugin
-Plugin 'metakirby5/codi.vim'
+"Plugin 'metakirby5/codi.vim'
 
 " Vim for Dockerfile
 Plugin 'ekalinin/Dockerfile.vim'
@@ -103,13 +103,11 @@ let g:airline#extensions#tabline#left_sep = ''
 let g:airline#extensions#tabline#left_alt_sep = ''
 let g:airline_theme='papercolor'
 " show absolute file path in status line
-"let g:airline_section_c = '%<%F%m %#__accent_red#%{airline#util#wrap(airline#parts#readonly(),0)}%#__restore__#%{ALEGetStatusLine()}'
 let g:airline_section_c = '%<%F%m %#__accent_red#%{airline#util#wrap(airline#parts#readonly(),0)}%#__restore__#'
 let g:asyncrun_status = ''
 let g:airline_section_error = airline#section#create_right(['%{g:asyncrun_status}'])
 " show tab number in tab line
 let g:airline#extensions#tabline#tab_nr_type = 1
-let g:airline#extensions#ale#enabled = 1
 let g:airline_powerline_fonts = 1
 let g:airline#extensions#tabline#show_tab_nr = 1
 let g:airline#extensions#tabline#formatter = 'default'
@@ -139,12 +137,20 @@ let g:airline_detect_paste = 1
 
 " let g:lightline = { 'colorscheme': 'PaperColor' }
 set laststatus=2
-color nord
-let g:nord_italic = 1
-let g:nord_italic_comments = 1
-let g:nord_uniform_status_lines = 1
-let g:nord_comment_brightness = 20
-let g:nord_uniform_diff_background = 1
+
+set t_Co=256
+"set term=xterm-256color
+"let &t_8f = "\<Esc>[38;2;%lu;%lu;%lum"
+"let &t_8b = "\<Esc>[48;2;%lu;%lu;%lum"
+"set termguicolors
+color onedark
+"set background=dark
+let g:onedark_termcolors=256
+"let g:nord_italic = 1
+"let g:nord_italic_comments = 1
+"let g:nord_uniform_status_lines = 1
+"let g:nord_comment_brightness = 20
+"let g:nord_uniform_diff_background = 1
 
 " set guifont=Source\ Code\ Pro\ for\ Powerline:h12
 set noshowmode
@@ -190,14 +196,6 @@ let g:ycm_filetype_whitelist = {
 			\ 'yaml':1,
 			\ 'zsh':1,
 			\ }
-
-set t_Co=256
-"set termguicolors
-"let g:neosolarized_contrast = "normal"
-"let g:neosolarized_visibility = "normal"
-"let g:neosolarized_bold = 1
-"let g:neosolarized_underline = 1
-"let g:neosolarized_italic = 0
 
 "I don't like swap files
 set noswapfile
@@ -258,9 +256,8 @@ set fenc=utf-8
 set fencs=utf-8,gbk,gb18030,gb2312,cp936,usc-bom,euc-jp
 
 " For full syntax highlighting:
-let python_highlight_all=1
+"let python_highlight_all=1
 syntax on
-syntax enable
 
 " Keep indentation level from previous line:
 autocmd FileType python set autoindent
@@ -349,7 +346,7 @@ set pastetoggle=<F3>
 """"""""""""""""""""""""""""""""""""""
 "Quickly Run
 """""""""""""""""""""""""""""""""""""
-map <F4> :call CompileRunGcc()<CR>
+map <F5> :call CompileRunGcc()<CR>
 func! CompileRunGcc()
 	exec 'w'
 	if &filetype ==# 'c'
@@ -413,7 +410,7 @@ set autochdir 	" 打开文件时，自动 cd 到文件所在目录
 let Tlist_WinWidth=40        "设置taglist宽度
 let Tlist_Exit_OnlyWindow=1  "tagList窗口是最后一个窗口，则退出Vim
 let Tlist_Use_Right_Window=1 "在Vim窗口右侧显示taglist窗口
-map <F5> :TlistToggle<CR>
+map <F4> :TlistToggle<CR>
 
 
 let tlist_vimwiki_settings = 'wiki;h:Headers'
@@ -480,20 +477,11 @@ let autosave=0
 let g:ale_sign_column_always = 1
 let g:ale_set_highlights = 0
 let g:ale_fix_on_save = 0
-" 自定义图标
+let g:ale_linters_explicit = 1
 let g:ale_sign_error = '✗'
 let g:ale_sign_warning = '⚡'
-
-autocmd FileType python noremap <buffer> <F7> :ALEFix<CR>
-
-let g:ale_fixers = {
-    \ 'python': ['add_blank_lines_for_python_control_statements','autopep8','isort','yapf','remove_trailing_lines','trim_whitespace']
-    \ }
-"普通模式下，sp前往上一个错误或警告，sn前往下一个错误或警告
-nmap sp <Plug>(ale_previous_wrap)
-nmap sn <Plug>(ale_next_wrap)
-"<Leader>d 查看错误或警告的详细信息
-nmap <Leader>d :ALEDetail<CR>
+"let g:airline#extensions#ale#enabled = 1
+let g:ale_statusline_format = ['⨉ %d', '⚠ %d', '⬥ ok']
 "改变状态栏信息格式
 "let g:ale_statusline_format = ['⨉ %d', '⚠ %d', '⬥ ok']
 "改变命令行消息
@@ -505,12 +493,23 @@ let g:ale_linters = {
 			\ 'ansible':['ansible-lint'],
 			\ 'dockerfile':['hadolint'],
 			\ 'markdown':['alex'],
-			\ 'python':['yapf'],
+			\ 'python':['flake8'],
 			\ 'vim':['vint'],
 			\ 'yaml':['yamllint'],
 			\}
 let g:ale_lint_on_text_changed = 'normal'
 let g:ale_lint_on_insert_leave = 1
+
+autocmd FileType python noremap <buffer> <F7> :ALEFix<CR>
+
+let g:ale_fixers = {
+    \ 'python': ['autopep8','yapf']
+    \ }
+"普通模式下，sp前往上一个错误或警告，sn前往下一个错误或警告
+nmap sp <Plug>(ale_previous_wrap)
+nmap sn <Plug>(ale_next_wrap)
+"<Leader>d 查看错误或警告的详细信息
+nmap <Leader>d :ALEDetail<CR>
 
 " repl
 "autocmd Filetype python nnoremap <leader>r :REPLToggle<Cr>
@@ -627,3 +626,6 @@ let g:UltiSnipsJumpBackwordTrigger = "<c-k>"
 " AsyncRun
 autocmd  QuickFixCmdPost  *  botright  copen  8
 let g:asyncrun_encs = 'gbk'
+
+" Highlight current line.
+set cursorline
