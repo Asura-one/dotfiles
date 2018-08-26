@@ -1,50 +1,106 @@
-if has('python')
-endif
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" 通用设置
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+let mapleader = " "      " 定义<leader>键
+set nocompatible         " 设置不兼容原始vi模式
+filetype on              " 设置开启文件类型侦测
+filetype plugin on       " 设置加载对应文件类型的插件
+set noeb                 " 关闭错误的提示
+syntax enable            " 开启语法高亮功能
+syntax on                " 自动语法高亮
+set t_Co=256             " 开启256色支持
+set showcmd              " select模式下显示选中的行数
+set ruler                " 总是显示光标位置
+set laststatus=2         " 总是显示状态栏
+set number               " 开启行号显示
+set cursorline           " 高亮显示当前行
+set whichwrap+=<,>,h,l   " 设置光标键跨行
+set ttimeoutlen=0        " 设置<ESC>键响应时间
+set virtualedit=block,onemore   " 允许光标出现在最后一个字符的后面
+set autochdir 	" 打开文件时，自动 cd 到文件所在目录
+
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" 代码缩进和排版
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+set autoindent           " 设置自动缩进
+set cindent              " 设置使用C/C++语言的自动缩进方式
+set cinoptions=g0,:0,N-s,(0    " 设置C/C++语言的具体缩进方式
+set smartindent          " 智能的选择对其方式
+filetype indent on       " 自适应不同语言的智能缩进
+filetype plugin indent on    " enables filetype detection
+set expandtab            " 将制表符扩展为空格
+set tabstop=4            " 设置编辑时制表符占用空格数
+set shiftwidth=4         " 设置格式化时制表符占用空格数
+set softtabstop=4        " 设置4个空格为制表符
+set smarttab             " 在行和段开始处使用制表符
+set nowrap               " 禁止折行
+"set backspace=2          " 使用回车键正常处理indent,eol,start等
+"set backspace=indent,eol,start
+set sidescroll=10        " 设置向右滚动字符数
+set nofoldenable         " 禁用折叠代码
+
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" 代码补全
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+set wildmenu             " vim自身命名行模式智能补全
+"set completeopt-=preview " 补全时不显示窗口，只显示补全列表
+"set completeopt=longest,menu,menuone
+
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" 搜索设置
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+set hlsearch            " 高亮显示搜索结果
+set incsearch           " 开启实时搜索功能
+set ignorecase          " 搜索时大小写不敏感
+set smartcase 	" 搜索时，智能大小写
+
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" 缓存设置
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+set nobackup            " 设置不备份
+set noswapfile          " 禁止生成临时文件
+set autoread            " 文件在vim之外修改过，自动重新读入
+"set autowrite           " 设置自动保存
+"set autowriteall
+set confirm             " 在处理未保存或只读文件的时候，弹出确认
+
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" 编码设置
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+set langmenu=zh_CN.UTF-8
+set helplang=cn
+set termencoding=utf-8
+set encoding=utf8
+set fileencodings=utf8,ucs-bom,gbk,cp936,gb2312,gb18030
+set fenc=utf-8
+set fencs=utf-8,gbk,gb18030,gb2312,cp936,usc-bom,euc-jp
+
 " write with sudo
 cabbrev w!! w !sudo tee %
 
-"vundle
-set nocompatible
-filetype plugin indent on    " enables filetype detection
 
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" 插件列表
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 set rtp+=~/.vim/bundle/Vundle.vim
 call vundle#begin()
-
 Plugin 'VundleVim/Vundle.vim'
-"git interface
 Plugin 'tpope/vim-fugitive'
 Plugin 'zivyangll/git-blame.vim'
-"filesystem
 Plugin 'scrooloose/nerdtree'
 Plugin 'jistr/vim-nerdtree-tabs'
 Plugin 'ctrlpvim/ctrlp.vim'
-
-"html
-"  isnowfy only compatible with python not python3
 Plugin 'isnowfy/python-vim-instant-markdown'
 Plugin 'jtratner/vim-flavored-markdown'
 Plugin 'suan/vim-instant-markdown'
 Plugin 'nelstrom/vim-markdown-preview'
-"python sytax checker
 Plugin 'nvie/vim-flake8'
 Plugin 'vim-scripts/indentpython.vim'
-" 添加python类型注释
 "Plugin 'sillybun/vim-autodoc'
-
-"python autopep8
 Plugin 'tell-k/vim-autopep8'
-
-" IndentLine
 Plugin 'Yggdroot/indentLine'
-
-"auto-completion stuff
 Plugin 'Raimondi/delimitMate'
 Plugin 'Valloric/YouCompleteMe'
-"code folding
-"Plugin 'tmhedberg/SimpylFold'
-
-"Colors!!!
-Plugin 'jnurmine/Zenburn'
 Plugin 'arcticicestudio/nord-vim'
 Plugin 'liuchengxu/space-vim-dark'
 Plugin 'drewtempelmeyer/palenight.vim'
@@ -52,66 +108,34 @@ Plugin 'ayu-theme/ayu-vim'
 Plugin 'rakr/vim-one'
 Plugin 'mhartington/oceanic-next'
 Plugin 'joshdick/onedark.vim'
-
-" codi.vim
-" The interactive scratchpad for hackers
-" This is very cool plugin
-"Plugin 'metakirby5/codi.vim'
-
-" Vim for Dockerfile
 Plugin 'ekalinin/Dockerfile.vim'
-
-" vim-airline
 Plugin 'vim-airline/vim-airline'
 Plugin 'vim-airline/vim-airline-themes'
-
-" vim-taglist
 Plugin 'vim-scripts/taglist.vim'
-
-" file icons
 Plugin 'ryanoasis/vim-devicons'
-
-" line up text
 Plugin 'godlygeek/tabular'
-
-" Asynchronous Lint Engine
 Plugin 'skywind3000/asyncrun.vim'
 Plugin 'w0rp/ale'
-
 "Plugin 'sillybun/vim-repl'
-
-" A Personal Wiki For Vim
 Plugin 'vimwiki/vimwiki'
-
 Plugin 'mbbill/undotree'
-
 Plugin 'SirVer/ultisnips'
 Plugin 'honza/vim-snippets'
-
 call vundle#end()
 
-"custom keys
-let mapleader=" "
-
-" /* base */
-" 显示正在输入的命令
-set showcmd
-
 " vim-airline
-let g:airline#extensions#tabline#enabled = 1
-let g:airline#extensions#tabline#left_sep = ''
-let g:airline#extensions#tabline#left_alt_sep = ''
+let g:airline#extensions#tabline#enabled = 1 " 是否打开tabline
+"let g:airline#extensions#tabline#left_sep = ''
+"let g:airline#extensions#tabline#left_alt_sep = ''
 let g:airline_theme='papercolor'
-" show absolute file path in status line
-let g:airline_section_c = '%<%F%m %#__accent_red#%{airline#util#wrap(airline#parts#readonly(),0)}%#__restore__#'
+"let g:airline_section_c = '%<%F%m %#__accent_red#%{airline#util#wrap(airline#parts#readonly(),0)}%#__restore__#' " 在状态行中显示绝对文件路径
 let g:asyncrun_status = ''
 let g:airline_section_error = airline#section#create_right(['%{g:asyncrun_status}'])
-" show tab number in tab line
-let g:airline#extensions#tabline#tab_nr_type = 1
+let g:airline#extensions#tabline#tab_nr_type = 1 " 在标签行中显示标签号
 let g:airline_powerline_fonts = 1
 let g:airline#extensions#tabline#show_tab_nr = 1
 let g:airline#extensions#tabline#formatter = 'default'
-let g:airline#extensions#tabline#buffer_nr_show = 0
+let g:airline#extensions#tabline#buffer_nr_show = 1 " tabline中buffer显示编号
 let g:airline#extensions#tabline#fnametruncate = 16
 let g:airline#extensions#tabline#fnamecollapse = 2
 let g:airline#extensions#tabline#buffer_idx_mode = 1
@@ -121,10 +145,11 @@ if !exists('g:airline_symbols')
 endif
 
 " powerline symbols
-let g:airline_left_sep = ''
-let g:airline_left_alt_sep = ''
-let g:airline_right_sep = ''
-let g:airline_right_alt_sep = ''
+"let g:airline_left_sep = ''
+"let g:airline_left_alt_sep = ''
+"let g:airline_right_sep = ''
+"let g:airline_right_alt_sep = ''
+"let g:powerline_symbls = 'unicode'
 let g:airline_symbols.branch = ''
 let g:airline_symbols.readonly = ''
 let g:airline_symbols.linenr = ''
@@ -135,17 +160,13 @@ let g:airline_symbols.whitespace = 'Ξ'
 let g:airline_detect_modified = 1
 let g:airline_detect_paste = 1
 
-" let g:lightline = { 'colorscheme': 'PaperColor' }
-set laststatus=2
-
-set t_Co=256
 "set term=xterm-256color
 "let &t_8f = "\<Esc>[38;2;%lu;%lu;%lum"
 "let &t_8b = "\<Esc>[48;2;%lu;%lu;%lum"
-"set termguicolors
+set termguicolors
 color onedark
 "set background=dark
-let g:onedark_termcolors=256
+"let g:onedark_termcolors=256
 "let g:nord_italic = 1
 "let g:nord_italic_comments = 1
 "let g:nord_uniform_status_lines = 1
@@ -154,9 +175,6 @@ let g:onedark_termcolors=256
 
 " set guifont=Source\ Code\ Pro\ for\ Powerline:h12
 set noshowmode
-
-
-let g:SimpylFold_docstring_preview = 1
 
 " YouCompleteMe
 "autocomplete
@@ -177,7 +195,6 @@ let g:ycm_confirm_extra_conf = 0
 "youcompleteme  默认tab  s-tab 和自动补全冲突
 let g:ycm_key_list_select_completion = ['<Enter>', '<Down>']
 let g:ycm_key_list_previous_completion = ['<S-TAB>', '<Up>']
-set completeopt=longest,menu,menuone
 noremap <c-z> <NOP>
 let g:ycm_key_invoke_completion= '<c-z>'
 autocmd InsertLeave * if pumvisible() == 0|pclose|endif
@@ -196,18 +213,6 @@ let g:ycm_filetype_whitelist = {
 			\ 'yaml':1,
 			\ 'zsh':1,
 			\ }
-
-"I don't like swap files
-set noswapfile
-
-" 自动加载文件
-set autoread
-
-" 自动保存文件
-set autowriteall
-
-"turn on numbering
-set number
 
 "python with virtualenv support
 py << EOF
@@ -250,20 +255,11 @@ au BufRead,BufNewFile *.py,*.pyw, set textwidth=100
 " Use UNIX (\n) line endings.
 au BufNewFile *.py,*.pyw,*.c,*.h set fileformat=unix
 
-" Set the default file encoding to UTF-8:
-set encoding=utf-8
-set fenc=utf-8
-set fencs=utf-8,gbk,gb18030,gb2312,cp936,usc-bom,euc-jp
-
 " For full syntax highlighting:
 "let python_highlight_all=1
-syntax on
 
 " Keep indentation level from previous line:
 autocmd FileType python set autoindent
-
-" make backspaces more powerfull
-set backspace=indent,eol,start
 
 " for different file types
 augroup filetype_formats
@@ -284,7 +280,6 @@ augroup filetype_formats
        \ let g:python_highlight_all = 1 |
        \ setlocal complete+=t |
        \ setlocal formatoptions-=t |
-       \ setlocal nowrap |
        \ setlocal commentstring=#%s |
        \ setlocal define=^\s*\\(def\\\\|class\\)
        " \ set listchars+=precedes:<,extends:>
@@ -391,19 +386,11 @@ au FileType python let b:delimitMate_nesting_quotes = ['"']
 " 关闭某些类型文件的自动补全
 " au FileType mail let b:delimitMate_autoclose = 0
 
-
-if has("autocmd")  " 打开时光标放在上次退出时的位置
-    autocmd BufReadPost *
-        \ if line("'\"") > 0 && line ("'\"") <= line("$") |
-    	\    exe "normal g'\"" |
-    	\ endif
-endif
-
-
-set smartcase 	" 搜索时，智能大小写
-set ignorecase 	" 搜索时，忽略大小写
-set incsearch 	" incremental search
-set autochdir 	" 打开文件时，自动 cd 到文件所在目录
+" 打开时光标放在上次退出时的位置
+autocmd BufReadPost *
+            \ if line("'\"") > 0 && line("'\"") <= line("$") |
+            \   exe "normal! g`\"" |
+            \ endif
 
 " Taglist
 " let Tlist_Show_One_File=1    "只显示当前文件的tags
@@ -429,8 +416,6 @@ let g:indentLine_char='|'
 let g:indentLine_enabled = 1
 let g:indentLine_color_term = 239
 let g:indentLine_color_gui = '#A4E57E'
-
-set autoindent
 
 function! RemoveTrailingWhitespace()
     if &ft != "diff"
@@ -483,7 +468,6 @@ let g:ale_sign_warning = '⚡'
 "let g:airline#extensions#ale#enabled = 1
 let g:ale_statusline_format = ['⨉ %d', '⚠ %d', '⬥ ok']
 "改变状态栏信息格式
-"let g:ale_statusline_format = ['⨉ %d', '⚠ %d', '⬥ ok']
 "改变命令行消息
 let g:ale_echo_msg_error_str = 'E'
 let g:ale_echo_msg_warning_str = 'W'
@@ -626,6 +610,3 @@ let g:UltiSnipsJumpBackwordTrigger = "<c-k>"
 " AsyncRun
 autocmd  QuickFixCmdPost  *  botright  copen  8
 let g:asyncrun_encs = 'gbk'
-
-" Highlight current line.
-set cursorline
