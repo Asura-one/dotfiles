@@ -1,58 +1,56 @@
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " 通用设置
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-let mapleader = " "      " 定义<leader>键
-set nocompatible         " 设置不兼容原始vi模式
-filetype on              " 设置开启文件类型侦测
-filetype plugin on       " 设置加载对应文件类型的插件
-set noeb                 " 关闭错误的提示
-syntax enable            " 开启语法高亮功能
-syntax on                " 自动语法高亮
-set t_Co=256             " 开启256色支持
-set showcmd              " select模式下显示选中的行数
-set ruler                " 总是显示光标位置
-set laststatus=2         " 总是显示状态栏
-set number               " 开启行号显示
-set cursorline           " 高亮显示当前行
-set whichwrap+=<,>,h,l   " 设置光标键跨行
-set ttimeoutlen=0        " 设置<ESC>键响应时间
-set virtualedit=block,onemore   " 允许光标出现在最后一个字符的后面
-set autochdir 	" 打开文件时，自动 cd 到文件所在目录
+let mapleader = " " "  定义<leader>键
+set nocompatible    "  设置不兼容原始vi模式
+filetype on         "  设置开启文件类型侦测
+filetype plugin on  "  设置加载对应文件类型的插件
+set noeb            "  关闭错误的提示
+syntax enable       "  开启语法高亮功能
+syntax on           "  自动语法高亮
+set t_Co=256        "  开启256色支持
+set showcmd         "  select模式下显示选中的行数
+set ruler           "  总是显示光标位置
+set laststatus=2    "  总是显示状态栏
+set number          "  开启行号显示
+set cursorline      "  高亮显示当前行
+set ttimeoutlen=0   "  设置<ESC>键响应时间
+"set virtualedit=all "  允许光标出现在最后一个字符的后面
+set autochdir       "  打开文件时，自动 cd 到文件所在目录
+set noshowmode      "  不显示左下角状态栏
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " 代码缩进和排版
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-set autoindent           " 设置自动缩进
-set cindent              " 设置使用C/C++语言的自动缩进方式
-set cinoptions=g0,:0,N-s,(0    " 设置C/C++语言的具体缩进方式
-set smartindent          " 智能的选择对其方式
-filetype indent on       " 自适应不同语言的智能缩进
-filetype plugin indent on    " enables filetype detection
-set expandtab            " 将制表符扩展为空格
-set tabstop=4            " 设置编辑时制表符占用空格数
-set shiftwidth=4         " 设置格式化时制表符占用空格数
-set softtabstop=4        " 设置4个空格为制表符
-set smarttab             " 在行和段开始处使用制表符
-set nowrap               " 禁止折行
-"set backspace=2          " 使用回车键正常处理indent,eol,start等
-"set backspace=indent,eol,start
-set sidescroll=10        " 设置向右滚动字符数
-set nofoldenable         " 禁用折叠代码
+set autoindent                 "  设置自动缩进
+set cindent                    "  设置使用C/C++语言的自动缩进方式
+set cinoptions=g0,:0,N-s,(0    "  设置C/C++语言的具体缩进方式
+set smartindent                "  智能的选择对其方式
+filetype indent on             "  自适应不同语言的智能缩进
+filetype plugin indent on      "  enables filetype detection
+set expandtab                  "  将制表符扩展为空格
+set tabstop=4                  "  设置编辑时制表符占用空格数
+set shiftwidth=4               "  设置格式化时制表符占用空格数
+set softtabstop=4              "  设置4个空格为制表符
+set smarttab                   "  在行和段开始处使用制表符
+set nowrap                     "  禁止折行
+set backspace=indent,eol,start "  使用回车键正常处理indent,eol,start等
+set sidescroll=10              "  设置向右滚动字符数
+set nofoldenable               "  禁用折叠代码
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " 代码补全
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-set wildmenu             " vim自身命名行模式智能补全
-"set completeopt-=preview " 补全时不显示窗口，只显示补全列表
-"set completeopt=longest,menu,menuone
+set wildmenu                         "  vim自身命名行模式智能补全
+set completeopt=longest,menu,menuone "  补全时不显示窗口，只显示补全列表
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " 搜索设置
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-set hlsearch            " 高亮显示搜索结果
-set incsearch           " 开启实时搜索功能
-set ignorecase          " 搜索时大小写不敏感
-set smartcase 	" 搜索时，智能大小写
+set hlsearch   "  高亮显示搜索结果
+set incsearch  "  开启实时搜索功能
+set ignorecase "  搜索时大小写不敏感
+set smartcase  "  搜索时，智能大小写
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " 缓存设置
@@ -60,8 +58,7 @@ set smartcase 	" 搜索时，智能大小写
 set nobackup            " 设置不备份
 set noswapfile          " 禁止生成临时文件
 set autoread            " 文件在vim之外修改过，自动重新读入
-"set autowrite           " 设置自动保存
-"set autowriteall
+set autowrite           " 设置自动保存
 set confirm             " 在处理未保存或只读文件的时候，弹出确认
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
@@ -73,7 +70,6 @@ set termencoding=utf-8
 set encoding=utf8
 set fileencodings=utf8,ucs-bom,gbk,cp936,gb2312,gb18030
 set fenc=utf-8
-set fencs=utf-8,gbk,gb18030,gb2312,cp936,usc-bom,euc-jp
 
 " write with sudo
 cabbrev w!! w !sudo tee %
@@ -123,7 +119,9 @@ Plugin 'SirVer/ultisnips'
 Plugin 'honza/vim-snippets'
 call vundle#end()
 
-" vim-airline
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" vim-airline 美化状态栏
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 let g:airline#extensions#tabline#enabled = 1 " 是否打开tabline
 "let g:airline#extensions#tabline#left_sep = ''
 "let g:airline#extensions#tabline#left_alt_sep = ''
@@ -160,23 +158,28 @@ let g:airline_symbols.whitespace = 'Ξ'
 let g:airline_detect_modified = 1
 let g:airline_detect_paste = 1
 
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" Colors 皮肤
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 "set term=xterm-256color
 "let &t_8f = "\<Esc>[38;2;%lu;%lu;%lum"
 "let &t_8b = "\<Esc>[48;2;%lu;%lu;%lum"
-set termguicolors
+"set termguicolors
+let g:onedark_termcolors=256
+let g:onedark_color_overrides = {"black": {"gui": "#1F2D3A", "cterm": "NONE", "cterm16": "0"}}
 color onedark
 "set background=dark
-"let g:onedark_termcolors=256
 "let g:nord_italic = 1
 "let g:nord_italic_comments = 1
 "let g:nord_uniform_status_lines = 1
 "let g:nord_comment_brightness = 20
 "let g:nord_uniform_diff_background = 1
+hi CursorLine   cterm=NONE ctermbg=black ctermfg=NONE guibg=black guifg=NONE " 设置行高亮颜色
 
-" set guifont=Source\ Code\ Pro\ for\ Powerline:h12
-set noshowmode
 
-" YouCompleteMe
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" YouCompleteMe 代码补全
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 "autocomplete
 "let g:ycm_autoclose_preview_window_after_completion=1
 let g:ycm_add_preview_to_completeopt = 0
@@ -214,7 +217,9 @@ let g:ycm_filetype_whitelist = {
 			\ 'zsh':1,
 			\ }
 
-"python with virtualenv support
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" python 虚拟环境支持
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 py << EOF
 import os
 import sys
@@ -303,7 +308,9 @@ augroup END
 " system clipboard
 set clipboard=unnamed
 
-" NERDTree config
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" NERDTree 文件浏览
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 map <F2> :NERDTreeToggle<CR>
 
 augroup nerd_behaviours
@@ -392,7 +399,9 @@ autocmd BufReadPost *
             \   exe "normal! g`\"" |
             \ endif
 
-" Taglist
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" Taglist 浏览代码函数
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " let Tlist_Show_One_File=1    "只显示当前文件的tags
 let Tlist_WinWidth=40        "设置taglist宽度
 let Tlist_Exit_OnlyWindow=1  "tagList窗口是最后一个窗口，则退出Vim
@@ -411,7 +420,9 @@ let tlist_css_settings = 'css;c:Classes;o:Objects(ID);t:Tags(Elements)'
 let tlist_javascript_settings = 'javascript;f:Functions;c:Classes;o:Objects'
 let tlist_json_settings = 'json;o:Objects'
 
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " indentLine
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 let g:indentLine_char='|'
 let g:indentLine_enabled = 1
 let g:indentLine_color_term = 239
@@ -443,7 +454,9 @@ autocmd BufWritePre * call RemoveTrailingWhitespace()
 "endfunction
 "autocmd bufnewfile *.py call HeadePython()
 
-" vim-devicons configuration
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" vim-devicons 文件图标
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 let g:webdevicons_enable=1
 let g:webdevicons_enable_nerdtree=1
 let g:webdevicons_enables_airline_tabline=1
@@ -457,7 +470,9 @@ autocmd FileType python noremap <buffer> <F8> :call Autopep8()<CR>
 " autosave
 let autosave=0
 
-" ale
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" ale 代码检查
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " 显示侧边栏
 let g:ale_sign_column_always = 1
 let g:ale_set_highlights = 0
@@ -521,7 +536,9 @@ nmap <Leader>c :<C-u>call gitblame#echo()<CR>
 
 "let mapleader = ","  " map leader键设置
 
-" vimwiki
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" vimwiki wiki工具
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 let g:vimwiki_menu = '' " 不在菜单栏显示Vimwiki
 let g:vimwiki_diary_months = {
     \ 1: '一月', 2: '二月', 3: '三月', 4: '四月', 5: '五月', 6: '六月',
@@ -553,7 +570,9 @@ map <leader>r :e<CR>
 "let g:autodoc_display_runtime_info = 0 " 是否统计函数运行信息
 "map <F2> :RecordParameter<CR>
 
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " undotree
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 if has("persistent_undo")
 	set undodir=~/.undodir/
 	set undofile
@@ -577,7 +596,9 @@ command! ZoomToggle call s:ZoomToggle()
 "nnoremap <silent> <Leader>z :ZoomToggle<CR>
 nnoremap <silent> <c-w>z :ZoomToggle<CR>
 
-" UltiSnips
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" UltiSnips 代码片段补全
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 let g:UltiSnipsExpandTrigger       = "<tab>"
 let g:UltiSnipsJumpForwardTrigger  = "<tab>"
 let g:UltiSnipsJumpBackwardTrigger = "<s-tab>"
