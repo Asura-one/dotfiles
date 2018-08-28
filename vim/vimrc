@@ -18,6 +18,8 @@ set ttimeoutlen=0   "  设置<ESC>键响应时间
 "set virtualedit=all "  允许光标出现在最后一个字符的后面
 set autochdir       "  打开文件时，自动 cd 到文件所在目录
 set noshowmode      "  不显示左下角状态栏
+set clipboard=unnamed " system clipboard
+let autosave=0 " autosave
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " 代码缩进和排版
@@ -174,7 +176,8 @@ color onedark
 "let g:nord_uniform_status_lines = 1
 "let g:nord_comment_brightness = 20
 "let g:nord_uniform_diff_background = 1
-hi CursorLine   cterm=NONE ctermbg=black ctermfg=NONE guibg=black guifg=NONE " 设置行高亮颜色
+hi CursorLine cterm=NONE ctermbg=black ctermfg=NONE guibg=black guifg=NONE " 设置行高亮颜色
+hi Search cterm=NONE ctermfg=NONE ctermbg=8 " 设置搜索高亮颜色
 
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
@@ -247,7 +250,7 @@ au BufRead,BufNewFile *.py,*.pyw set expandtab
 au BufRead,BufNewFile *.py set softtabstop=4
 
 " Use the below highlight group when displaying bad whitespace is desired.
-highlight BadWhitespace ctermbg=red guibg=red
+hi BadWhitespace ctermbg=red guibg=red
 
 " Display tabs at the beginning of a line in Python mode as bad.
 au BufRead,BufNewFile *.py,*.pyw match BadWhitespace /^\t\+/
@@ -305,9 +308,6 @@ augroup filetype_formats
 
 augroup END
 
-" system clipboard
-set clipboard=unnamed
-
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " NERDTree 文件浏览
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
@@ -339,11 +339,6 @@ let NERDTreeCascadeSingleChildDir=0
 let g:NERDTreeNaturalSort = 1
 let g:NERDTreeShowLineNumbers = 0
 let g:NERDTreeShowHidden = 1
-
-" 如果你复制代码时，它将使代码保持原始缩进
-set pastetoggle=<F3>
-
-
 
 """"""""""""""""""""""""""""""""""""""
 "Quickly Run
@@ -467,9 +462,6 @@ let g:DevIconsEnableFoldersOpenClose=1
 " python autopep8
 autocmd FileType python noremap <buffer> <F8> :call Autopep8()<CR>
 
-" autosave
-let autosave=0
-
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " ale 代码检查
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
@@ -502,7 +494,7 @@ let g:ale_lint_on_insert_leave = 1
 autocmd FileType python noremap <buffer> <F7> :ALEFix<CR>
 
 let g:ale_fixers = {
-    \ 'python': ['autopep8','yapf']
+    \ 'python': ['autopep8', 'yapf']
     \ }
 "普通模式下，sp前往上一个错误或警告，sn前往下一个错误或警告
 nmap sp <Plug>(ale_previous_wrap)
@@ -534,8 +526,6 @@ autocmd BufWritePost $MYVIMRC source $MYVIMRC
 " git blame
 nmap <Leader>c :<C-u>call gitblame#echo()<CR>
 
-"let mapleader = ","  " map leader键设置
-
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " vimwiki wiki工具
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
@@ -559,9 +549,6 @@ let develop_notes.ext = '.md'
 
 let g:vimwiki_list = [develop_notes]
 let g:vimwiki_ext2syntax = {'.md': 'markdown', '.markdown': 'markdown', '.mdown': 'markdown'}
-
-" 刷新文件
-map <leader>r :e<CR>
 
 
 " vim-autodoc
@@ -631,3 +618,10 @@ let g:UltiSnipsJumpBackwordTrigger = "<c-k>"
 " AsyncRun
 autocmd  QuickFixCmdPost  *  botright  copen  8
 let g:asyncrun_encs = 'gbk'
+
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" 键位映射
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+nnoremap <cr> :noh<CR><CR>:<backspace> " 取消搜索高亮
+set pastetoggle=<F3> " 如果你复制代码时，它将使代码保持原始缩进
+map <leader>r :e<CR> " 刷新文件
