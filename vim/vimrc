@@ -1,25 +1,29 @@
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " 通用设置
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-let mapleader = " " "  定义<leader>键
-set nocompatible    "  设置不兼容原始vi模式
-filetype on         "  设置开启文件类型侦测
-filetype plugin on  "  设置加载对应文件类型的插件
-set noeb            "  关闭错误的提示
-syntax enable       "  开启语法高亮功能
-syntax on           "  自动语法高亮
-set t_Co=256        "  开启256色支持
-set showcmd         "  select模式下显示选中的行数
-set ruler           "  总是显示光标位置
-set laststatus=2    "  总是显示状态栏
-set number          "  开启行号显示
-set cursorline      "  高亮显示当前行
-set ttimeoutlen=0   "  设置<ESC>键响应时间
-"set virtualedit=all "  允许光标出现在最后一个字符的后面
-set autochdir       "  打开文件时，自动 cd 到文件所在目录
-set noshowmode      "  不显示左下角状态栏
+let mapleader = ' '   " 定义<leader>键
+set nocompatible      " 设置不兼容原始vi模式
+filetype on           " 设置开启文件类型侦测
+filetype plugin on    " 设置加载对应文件类型的插件
+set noeb              " 关闭错误的提示
+syntax enable         " 开启语法高亮功能
+syntax on             " 自动语法高亮
+set t_Co=256          " 开启256色支持
+set showcmd           " select模式下显示选中的行数
+set ruler             " 总是显示光标位置
+set laststatus=2      " 总是显示状态栏
+set number            " 开启行号显示
+set cursorline        " 高亮显示当前行
+set ttimeoutlen=0     " 设置<ESC>键响应时间
+" set virtualedit=all                " 允许光标出现在最后一个字符的后面
+set autochdir         " 打开文件时，自动 cd 到文件所在目录
+set noshowmode        " 不显示左下角状态栏
 set clipboard=unnamed " system clipboard
-let autosave=0 " autosave
+let autosave=0        " autosave
+set showmatch         " 高亮标识匹配的括号
+set scrolloff=5       " 光标距离窗口上下保留5行
+" set spell spelllang=en_us          " 开启内置拼写检查
+set undofile          " 历史记录
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " 代码缩进和排版
@@ -30,12 +34,12 @@ set cinoptions=g0,:0,N-s,(0    "  设置C/C++语言的具体缩进方式
 set smartindent                "  智能的选择对其方式
 filetype indent on             "  自适应不同语言的智能缩进
 filetype plugin indent on      "  enables filetype detection
-set expandtab                  "  将制表符扩展为空格
+"set expandtab                  "  将制表符扩展为空格
 set tabstop=4                  "  设置编辑时制表符占用空格数
 set shiftwidth=4               "  设置格式化时制表符占用空格数
 set softtabstop=4              "  设置4个空格为制表符
 set smarttab                   "  在行和段开始处使用制表符
-set nowrap                     "  禁止折行
+"set nowrap                     "  禁止折行
 set backspace=indent,eol,start "  使用回车键正常处理indent,eol,start等
 set sidescroll=10              "  设置向右滚动字符数
 set nofoldenable               "  禁用折叠代码
@@ -80,46 +84,48 @@ cabbrev w!! w !sudo tee %
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " 插件列表
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-set rtp+=~/.vim/bundle/Vundle.vim
-call vundle#begin()
-Plugin 'VundleVim/Vundle.vim'
-Plugin 'tpope/vim-fugitive'
-Plugin 'zivyangll/git-blame.vim'
-Plugin 'scrooloose/nerdtree'
-Plugin 'jistr/vim-nerdtree-tabs'
-Plugin 'ctrlpvim/ctrlp.vim'
-Plugin 'isnowfy/python-vim-instant-markdown'
-Plugin 'jtratner/vim-flavored-markdown'
-Plugin 'suan/vim-instant-markdown'
-Plugin 'nelstrom/vim-markdown-preview'
-Plugin 'nvie/vim-flake8'
-Plugin 'vim-scripts/indentpython.vim'
-"Plugin 'sillybun/vim-autodoc'
-Plugin 'tell-k/vim-autopep8'
-Plugin 'Yggdroot/indentLine'
-Plugin 'Raimondi/delimitMate'
-Plugin 'Valloric/YouCompleteMe'
-Plugin 'arcticicestudio/nord-vim'
-Plugin 'liuchengxu/space-vim-dark'
-Plugin 'drewtempelmeyer/palenight.vim'
-Plugin 'ayu-theme/ayu-vim'
-Plugin 'rakr/vim-one'
-Plugin 'mhartington/oceanic-next'
-Plugin 'joshdick/onedark.vim'
-Plugin 'ekalinin/Dockerfile.vim'
-Plugin 'vim-airline/vim-airline'
-Plugin 'vim-airline/vim-airline-themes'
-Plugin 'vim-scripts/taglist.vim'
-Plugin 'ryanoasis/vim-devicons'
-Plugin 'godlygeek/tabular'
-Plugin 'skywind3000/asyncrun.vim'
-Plugin 'w0rp/ale'
-"Plugin 'sillybun/vim-repl'
-Plugin 'vimwiki/vimwiki'
-Plugin 'mbbill/undotree'
-Plugin 'SirVer/ultisnips'
-Plugin 'honza/vim-snippets'
-call vundle#end()
+call plug#begin('~/.vim/plugged')
+Plug 'tpope/vim-fugitive'
+Plug 'zivyangll/git-blame.vim'
+Plug 'scrooloose/nerdtree'
+Plug 'jistr/vim-nerdtree-tabs'
+Plug 'ctrlpvim/ctrlp.vim'
+Plug 'isnowfy/python-vim-instant-markdown'
+Plug 'jtratner/vim-flavored-markdown'
+Plug 'suan/vim-instant-markdown'
+Plug 'nelstrom/vim-markdown-preview'
+Plug 'nvie/vim-flake8'
+Plug 'vim-scripts/indentpython.vim'
+"Plug 'sillybun/vim-autodoc'
+Plug 'tell-k/vim-autopep8'
+Plug 'Yggdroot/indentLine'
+Plug 'Raimondi/delimitMate'
+Plug 'Valloric/YouCompleteMe'
+Plug 'davidhalter/jedi-vim'
+Plug 'arcticicestudio/nord-vim'
+Plug 'liuchengxu/space-vim-dark'
+Plug 'drewtempelmeyer/palenight.vim'
+Plug 'ayu-theme/ayu-vim'
+Plug 'rakr/vim-one'
+Plug 'mhartington/oceanic-next'
+Plug 'joshdick/onedark.vim'
+Plug 'ekalinin/Dockerfile.vim'
+Plug 'vim-airline/vim-airline'
+Plug 'vim-airline/vim-airline-themes'
+Plug 'vim-scripts/taglist.vim'
+Plug 'ryanoasis/vim-devicons'
+Plug 'godlygeek/tabular'
+Plug 'skywind3000/asyncrun.vim'
+Plug 'w0rp/ale'
+"Plug 'sillybun/vim-repl'
+Plug 'vimwiki/vimwiki'
+Plug 'mbbill/undotree'
+Plug 'SirVer/ultisnips'
+Plug 'honza/vim-snippets'
+Plug 'z0mbix/vim-shfmt'
+Plug 'ervandew/supertab'
+Plug '~/.fzf'
+call plug#end()
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " vim-airline 美化状态栏
@@ -170,40 +176,42 @@ let g:airline_detect_paste = 1
 let g:onedark_termcolors=256
 let g:onedark_color_overrides = {"black": {"gui": "#1F2D3A", "cterm": "NONE", "cterm16": "0"}}
 color onedark
-"set background=dark
-"let g:nord_italic = 1
-"let g:nord_italic_comments = 1
-"let g:nord_uniform_status_lines = 1
-"let g:nord_comment_brightness = 20
-"let g:nord_uniform_diff_background = 1
 hi CursorLine cterm=NONE ctermbg=black ctermfg=NONE guibg=black guifg=NONE " 设置行高亮颜色
 hi Search cterm=NONE ctermfg=NONE ctermbg=8 " 设置搜索高亮颜色
+hi Visual cterm=NONE ctermfg=NONE ctermbg=0 " 设置Visual 模式高亮颜色
+hi BadWhitespace ctermbg=red guibg=red " 使用红色显示多余空格
 
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " YouCompleteMe 代码补全
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 "autocomplete
-"let g:ycm_autoclose_preview_window_after_completion=1
 let g:ycm_add_preview_to_completeopt = 0
-let g:ycm_collect_identifiers_from_comments_and_strings = 1
-let g:ycm_collect_identifiers_from_tags_files = 1
-let g:ycm_complete_in_comments=1
-let g:ycm_complete_in_strings = 1
+let g:ycm_autoclose_preview_window_after_completion = 1
+let g:ycm_autoclose_preview_window_after_insertion = 1        " 离开插入模式自动关闭补全
+let g:ycm_cache_omnifunc = 0                                  " 禁止缓存匹配项，每次都重新生成匹配项
+let g:ycm_collect_identifiers_from_comments_and_strings = 0   " 注释和字符串中的文字补全
+let g:ycm_collect_identifiers_from_tags_files = 1             " YCM基于标签引擎补全
+let g:ycm_complete_in_comments = 1                            " 注释补全
+let g:ycm_complete_in_strings = 1                             " 字符串补全
+let g:ycm_confirm_extra_conf = 0
 let g:ycm_global_ycm_extra_conf = '~/.vim/.ycm_extra_conf.py'
-let g:ycm_min_num_identifier_candidate_chars = 2
+let g:ycm_goto_buffer_command = 'horizontal-split'            " 丰实现和声明之间跳转，并分屏打开
+let g:ycm_min_num_of_chars_for_competion = 2                  " 第二个字符开始补全
 let g:ycm_python_binary_path = 'python'
-let g:ycm_seed_indetifiers_with_syntax=1
+let g:ycm_seed_indetifiers_with_syntax = 1                    " 语法关键字补全
 let g:ycm_server_log_level = 'info'
 let g:ycm_server_python_interpreter='/usr/bin/python'
 let g:ycm_show_diagnostcs_ui = 0
-let g:ycm_confirm_extra_conf = 0
+"let g:ycm_use_ultisnips_completer = 1                         " 整合UltiSnips的提示
 "youcompleteme  默认tab  s-tab 和自动补全冲突
-let g:ycm_key_list_select_completion = ['<Enter>', '<Down>']
-let g:ycm_key_list_previous_completion = ['<S-TAB>', '<Up>']
+"let g:ycm_key_list_select_completion = ['<Enter>', '<Down>']
+"let g:ycm_key_list_previous_completion = ['<S-TAB>', '<Up>']
+let g:ycm_key_list_select_completion = ['<Down>']
+let g:ycm_key_list_previous_completion = ['<Up>']
 noremap <c-z> <NOP>
 let g:ycm_key_invoke_completion= '<c-z>'
-autocmd InsertLeave * if pumvisible() == 0|pclose|endif
+autocmd InsertLeave * if pumvisible() == 0|pclose|endif " 离开插入模式后自动关闭预览窗口
 "inoremap <expr> <CR>       pumvisible() ? '<C-y>' : '\<CR>' "和其他插件有冲突
 map <leader>g  :YcmCompleter GoToDefinitionElseDeclaration<CR>
 let g:ycm_semantic_triggers =  {
@@ -235,22 +243,14 @@ EOF
 "it would be nice to set tag files by the active virtualenv here
 ":set tags=~/mytags "tags for ctags and taglist
 "omnicomplete
-"autocmd FileType python set omnifunc=jedi#completions
-autocmd FileType python set omnifunc=pythoncomplete#Complete
+autocmd FileType python set omnifunc=jedi#completions
+"autocmd FileType python set omnifunc=pythoncomplete#Complete
 
 hi pythonSelf  ctermfg=68  guifg=#5f87d7 cterm=bold gui=bold
 
-"------------Start Python PEP 8 stuff----------------
-" Number of spaces that a pre-existing tab is equal to.
-au BufRead,BufNewFile *py,*pyw,*.c,*.h set tabstop=4
-
-"spaces for indents
-au BufRead,BufNewFile *.py,*pyw set shiftwidth=4
-au BufRead,BufNewFile *.py,*.pyw set expandtab
-au BufRead,BufNewFile *.py set softtabstop=4
-
-" Use the below highlight group when displaying bad whitespace is desired.
-hi BadWhitespace ctermbg=red guibg=red
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" python pep8
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 
 " Display tabs at the beginning of a line in Python mode as bad.
 au BufRead,BufNewFile *.py,*.pyw match BadWhitespace /^\t\+/
@@ -263,11 +263,7 @@ au BufRead,BufNewFile *.py,*.pyw, set textwidth=100
 " Use UNIX (\n) line endings.
 au BufNewFile *.py,*.pyw,*.c,*.h set fileformat=unix
 
-" For full syntax highlighting:
-"let python_highlight_all=1
-
-" Keep indentation level from previous line:
-autocmd FileType python set autoindent
+autocmd BufNewFile,BufRead *.md,*.markdown,*.mmd  nested setlocal filetype=markdown
 
 " for different file types
 augroup filetype_formats
@@ -297,9 +293,6 @@ augroup filetype_formats
       \ setlocal tabstop=2     |
       \ setlocal softtabstop=2 |
       \ setlocal shiftwidth=2
-
-  " autocmd BufNewFile,BufRead *.{md,mkd,mkdn,mark*}
-  "   \ set filetype=markdown
 
   " useless whitespaces
   au BufRead,BufNewFile *.py,*.pyw,*.c,*.h,*.{vim,vimrc}
@@ -343,8 +336,8 @@ let g:NERDTreeShowHidden = 1
 """"""""""""""""""""""""""""""""""""""
 "Quickly Run
 """""""""""""""""""""""""""""""""""""
-map <F5> :call CompileRunGcc()<CR>
-func! CompileRunGcc()
+nnoremap <F5> :call <SID>compile_and_run()<CR>
+func! s:compile_and_run()
 	exec 'w'
 	if &filetype ==# 'c'
 		exec 'gcc -o3 % -o %<'
@@ -356,7 +349,7 @@ func! CompileRunGcc()
 		exec '!javac %'
 		exec '!time java %<'
 	elseif &filetype ==# 'sh'
-		:!time bash %
+		exec 'AsyncRun! time bash %'
 	elseif &filetype ==# 'python'
 		if search('@profile')
 			exec 'AsyncRun kernprof -l -v %'
@@ -434,21 +427,6 @@ function! RemoveTrailingWhitespace()
 endfunction
 autocmd BufWritePre * call RemoveTrailingWhitespace()
 
-" python
-"function HeadePython()
-"	call setline(1, "#!/usr/bin/env python3")
-"	call append(1, "# -*- coding: utf-8 -*-")
-"	call append(2, "")
-"	call append(3, '"""')
-"	call append(4, "Description: ")
-"	call append(5, "Author: Asura")
-"	call append(6, "E-mail: zishuheimixhou@163.com")
-"	call append(7, "Date: " . strftime("%Y-%m-%d %H:%M:%S"))
-"	call append(8, "Python release: 2.7")
-"	call append(9, '"""')
-"endfunction
-"autocmd bufnewfile *.py call HeadePython()
-
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " vim-devicons 文件图标
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
@@ -494,7 +472,8 @@ let g:ale_lint_on_insert_leave = 1
 autocmd FileType python noremap <buffer> <F7> :ALEFix<CR>
 
 let g:ale_fixers = {
-    \ 'python': ['autopep8', 'yapf']
+    \ 'python': ['autopep8', 'yapf'],
+    \ 'bash': ['shfmt'],
     \ }
 "普通模式下，sp前往上一个错误或警告，sn前往下一个错误或警告
 nmap sp <Plug>(ale_previous_wrap)
@@ -521,7 +500,7 @@ nmap <Leader>d :ALEDetail<CR>
 "			\}
 
 " auto load vimrc
-autocmd BufWritePost $MYVIMRC source $MYVIMRC
+" autocmd BufWritePost $MYVIMRC source $MYVIMRC
 
 " git blame
 nmap <Leader>c :<C-u>call gitblame#echo()<CR>
@@ -586,34 +565,36 @@ nnoremap <silent> <c-w>z :ZoomToggle<CR>
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " UltiSnips 代码片段补全
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-let g:UltiSnipsExpandTrigger       = "<tab>"
-let g:UltiSnipsJumpForwardTrigger  = "<tab>"
-let g:UltiSnipsJumpBackwardTrigger = "<s-tab>"
-let g:UltiSnipsSnippetDirectories  = ['UltiSnips']
-let g:UltiSnipsSnippetsDir = '~/.vim/UltiSnips'
+let g:UltiSnipsExpandTrigger       = "<c-e>"
+let g:UltiSnipsJumpForwardTrigger  = "<c-j>"
+let g:UltiSnipsJumpBackwardTrigger = "<c-k>"
+let g:UltiSnipsSnippetsDir = '/home/asura/.vim/mysnippets'
+let g:UltiSnipsSnippetDirectories=["mysnippets"]
+let g:UltiSnipsEditSplit='vertical'
 " 定义存放代码片段的文件夹 .vim/UltiSnips下，使用自定义和默认的，将会的到全局，有冲突的会提示
 " 进入对应filetype的snippets进行编辑
 map <leader>us :UltiSnipsEdit<CR>
+au FileType markdown :UltiSnipsAddFiletypes markdown
 
 " ctrl+j/k 进行选择
-func! g:JInYCM()
-    if pumvisible()
-        return "\<C-n>"
-    else
-        return "\<c-j>"
-    endif
-endfunction
-
-func! g:KInYCM()
-    if pumvisible()
-        return "\<C-p>"
-    else
-        return "\<c-k>"
-    endif
-endfunction
-inoremap <c-j> <c-r>=g:JInYCM()<cr>
-au BufEnter,BufRead * exec "inoremap <silent> " . g:UltiSnipsJumpBackwordTrigger . " <C-R>=g:KInYCM()<cr>"
-let g:UltiSnipsJumpBackwordTrigger = "<c-k>"
+" func! g:JInYCM()
+"     if pumvisible()
+"         return "\<C-n>"
+"     else
+"         return "\<c-j>"
+"     endif
+" endfunction
+"
+" func! g:KInYCM()
+"     if pumvisible()
+"         return "\<C-p>"
+"     else
+"         return "\<c-k>"
+"     endif
+" endfunction
+" inoremap <c-j> <c-r>=g:JInYCM()<cr>
+" au BufEnter,BufRead * exec "inoremap <silent> " . g:UltiSnipsJumpBackwordTrigger . " <C-R>=g:KInYCM()<cr>"
+" let g:UltiSnipsJumpBackwordTrigger = "<c-k>"
 
 " AsyncRun
 autocmd  QuickFixCmdPost  *  botright  copen  8
@@ -625,3 +606,8 @@ let g:asyncrun_encs = 'gbk'
 nnoremap <cr> :noh<CR><CR>:<backspace> " 取消搜索高亮
 set pastetoggle=<F3> " 如果你复制代码时，它将使代码保持原始缩进
 map <leader>r :e<CR> " 刷新文件
+
+
+" jedi
+let g:SuperTabDefaultCompletionType = "context"
+let g:jedi#popup_on_dot = 0
