@@ -1,6 +1,6 @@
 let g:buftabline_indicators=1
-hi! Tabline cterm=NONE gui=None
-hi! TablineFill cterm=NONE gui=None
+hi! Tabline cterm=NONE gui=NONE
+hi! TablineFill cterm=NONE gui=NONE
 hi! TablineSel cterm=reverse gui=reverse
 set hidden
 set wildmode=list:longest
@@ -127,6 +127,29 @@ let s:file_node_pattern_matches = {
   \ '.*mootools.*\.js$'     : ''
 \}
 
+let s:colors = {
+  \ 'null': ['#000000', '#00afd7', '#000000'],
+  \ 'inactive': ['#000000', '#00afd7', 'black'],
+  \ 'active': ['#000000', '#00afd7', '#000000'],
+  \ 'inactive_mod': ['#000000', '#00afd7', '#000000'],
+  \ 'active_mod': ['#000000', '#00afd7', '#000000'],
+  \ 'inactive_ro': ['#000000', '#00afd7', 'black'],
+  \ 'active_ro': ['lightred', 'darkred', '#000000'],
+\ }
+
+function! s:init_colors()
+  for l:a in keys(s:colors)
+    for l:b in keys(s:colors)
+      if s:colors[l:a][0] == s:colors[l:b][0]
+        exec 'hi TabLineSep'.l:a.b.' guibg='.s:colors[l:a][0].' guifg='.s:colors[l:a][2]
+      else
+        exec 'hi TabLineSep'.l:a.b.' guibg='.s:colors[l:a][0].' guifg='.s:colors[l:b][0]
+      endif
+    endfor
+    exec 'hi TabLine'.l:a.' guibg='.s:colors[l:a][0].' guifg='.s:colors[l:a][1]
+  endfor
+endfunction
+
 set tabline=%!MyTabLine()
 
 function! GetFileIcon(path)
@@ -183,3 +206,34 @@ function! MyTabLabel(n)
     return a:n .':'.fnamemodify(name, ':t'). ' '. icon
   endif
 endfunction
+
+function! MyTabLine()
+  "if &buftype =~# '\v(help|nofile|terminal)' | return '' | endif
+  let s = ''
+  for i in range(tabpagenr('$'))
+    " select the highlighting
+    if i + 1 == tabpagenr()
+      let s .= '%#TabLineSel#'
+    else
+      let s .= '%#TabLine#'
+    endif
+    " set the tab page number (for mouse clicks)
+    let s .= '%' . (i + 1) . 'T'
+
+    " the label is made by MyTabLabel()
+    let s .= ' %{MyTabLabel(' . (i + 1) . ')} '
+  endfor
+  " after the last tab fill with TabLineFill and reset tab page nr
+  let s .= '%#TabLineFill#%T'
+  let s .= ' %= '
+  let s .= '%#TabLineSepnullinactive# '
+  let s .= '%#TabLineSepinactiveinactive# '
+  let s .= system("date '+%H:%M %m-%d' | tr -d '\n'")
+  let s .= '%#TabLineSepinactiveinactive_mod# '
+  let s .= '%#TabLineSepinactive_modinactive_mod# '
+  let s .= get(g:, 'coc_weather', '')
+  let s .= ' % '
+  return s
+endfunction
+
+call s:init_colors()

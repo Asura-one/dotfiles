@@ -1,23 +1,34 @@
 scriptencoding utf-8
 
+let s:jobs = {}
+
 function! Buf_total_num()
     return len(filter(range(1, bufnr('$')), 'buflisted(v:val)'))
 endfunction
+
 function! File_size(f)
     let l:size = getfsize(expand(a:f))
     if l:size == 0 || l:size == -1 || l:size == -2
         return ''
     endif
     if l:size < 1024
-        return l:size.' bytes'
+        return ' '.l:size.' bytes '
     elseif l:size < 1024*1024
-        return printf('%.1f', l:size/1024.0).'k'
+        return ' '.printf('%.1f', l:size/1024.0).'k '
     elseif l:size < 1024*1024*1024
-        return printf('%.1f', l:size/1024.0/1024.0) . 'm'
+        return ' '.printf('%.1f', l:size/1024.0/1024.0) . 'm '
     else
-        return printf('%.1f', l:size/1024.0/1024.0/1024.0) . 'g'
+        return ' '.printf('%.1f', l:size/1024.0/1024.0/1024.0) . 'g '
     endif
 endfunction
+
+augroup StatusLineRefresher
+    autocmd!
+    autocmd User ALELintPre let g:LinterProgress = ' [Lint...] ' | redrawstatus
+    autocmd User ALELintPost let g:LinterProgress = '' | redrawstatus
+    autocmd User ALEFixPre let g:FixerProgress = ' [Fix...] ' | redrawstatus
+    autocmd User ALEFixPost let g:FixerProgress = '' | redrawstatus
+augroup END
 
 function! LinterStatus() abort
     let l:counts = ale#statusline#Count(bufnr(''))
@@ -25,14 +36,17 @@ function! LinterStatus() abort
     let l:all_errors = l:counts.error + l:counts.style_error
     let l:all_non_errors = l:counts.total - l:all_errors
 
-    return l:counts.total == 0 ? 'OK' : printf(
-    \   '%dW %dE',
+    return l:counts.total == 0 ? ' [ ✔ OK ] ' : printf(
+    \   ' [ ⚡ %d ✗ %d ] ',
     \   all_non_errors,
     \   all_errors
     \)
 endfunction
 
-let g:currentmode={
+let g:LinterProgress = ''
+let g:FixerProgress = ''
+
+let g:modes={
     \ 'n'  : 'Normal',
     \ 'no' : 'Normal·Operator Pending',
     \ 'v'  : 'Visual',
@@ -51,33 +65,32 @@ let g:currentmode={
     \ 'rm' : 'More',
     \ 'r?' : 'Confirm',
     \ '!'  : 'Shell',
-    \ 't'  : 'Terminal'
+    \ 't'  : 'Terminal',
     \}
 
 function! GitInfo()
   let git = fugitive#head()
   if git != ''
-    return ' '.fugitive#head()
+    return '  '.fugitive#head().' '
   else
     return ''
 endfunction
 
-function! ChangeStatuslineColor()
-  if (mode() =~# '\v(n|no)')
-    exe 'hi! StatusLine ctermfg=008'
-  elseif (mode() =~# '\v(v|V)' || g:currentmode[mode()] ==# 'V·Block' || get(g:currentmode, mode(), '') ==# 't')
-    exe 'hi! StatusLine ctermfg=005'
-  elseif (mode() ==# 'i')
-    exe 'hi! StatusLine ctermfg=004'
-  else
-    exe 'hi! StatusLine ctermfg=006'
-  endif
-
-  return ''
+function! s:StatusLine()
+  let l:mode = '%1* %{toupper(g:modes[mode()])} %3* [B-%n] %*'
+  let l:paste = "%2*%#paste#%{&paste?'PASTE ':''}%*"
+  let l:branch = '%8*%{GitInfo()}%*'
+  let l:buf_num = '%2* [TOT:%{Buf_total_num()}] %*'
+  let l:fs = '%3*%{File_size(@%)}%*'
+  let l:file_path = '%4* %f%*'
+  let l:lint_status = '%2*%{LinterProgress}%{FixerProgress}%{LinterStatus()}%*'
+  let l:pos = '%8* %m%r%y %h%w%*'
+  let l:enc = '%2*%=%7* %{&ff} | %{"".(&fenc==""?&enc:&fenc).((exists("+bomb") && &bomb)?",B":"")}'
+  let l:pct = '%8* %p%%  %l/%L %c %*'
+  return l:mode.l:paste.l:branch.l:buf_num.l:fs.l:file_path.l:lint_status.l:pos.l:enc.l:pct
 endfunction
 
-
-let s:color256 = {
+let s:colors = {
       \ 0 : '#000000',  1 : '#800000',  2 : '#008000',  3 : '#808000',  4 : '#000080',  5 : '#800080',  6 : '#008080' , 7 : '#c0c0c0',
       \ 8 : '#808080',  9 : '#ff0000', 10 : '#00ff00', 11 : '#ffff00', 12 : '#0000ff', 13 : '#ff00ff', 14 : '#00ffff', 15 : '#ffffff',
       \ 16 : '#000000',  17 : '#00005f',  18 : '#000087',  19 : '#0000af',  20 : '#0000d7',  21 : '#0000ff',
@@ -116,40 +129,48 @@ let s:color256 = {
       \ 214 : '#ffaf00', 215 : '#ffaf5f', 216 : '#ffaf87', 217 : '#ffafaf', 218 : '#ffafd7', 219 : '#ffafff',
       \ 220 : '#ffd700', 221 : '#ffd75f', 222 : '#ffd787', 223 : '#ffd7af', 224 : '#ffd7d7', 225 : '#ffd7ff',
       \ 226 : '#ffff00', 227 : '#ffff5f', 228 : '#ffff87', 229 : '#ffffaf', 230 : '#ffffd7', 231 : '#ffffff',
-      \
       \ 232 : '#080808', 233 : '#121212', 234 : '#1c1c1c', 235 : '#262626', 236 : '#303030', 237 : '#3a3a3a',
       \ 238 : '#444444', 239 : '#4e4e4e', 240 : '#585858', 241 : '#606060', 242 : '#666666', 243 : '#767676',
       \ 244 : '#808080', 245 : '#8a8a8a', 246 : '#949494', 247 : '#9e9e9e', 248 : '#a8a8a8', 249 : '#b2b2b2',
       \ 250 : '#bcbcbc', 251 : '#c6c6c6', 252 : '#d0d0d0', 253 : '#dadada', 254 : '#e4e4e4', 255 : '#eeeeee',
       \ }
-let s:colors = {
-      \ 16: '#292b2e', 24: '#3C8380', 28: '#c269fe', 30: '#2aa1ae', 36: '#20af81', 40: '#00ff00',
-      \ 59: '#FF73B9', 68: '#4f97d7', 75: '#FF62B0', 76: '#86dc2f', 81: '#f9bb00', 88: '#330033',
-      \ 104: '#df90ff', 114: '#67b11d', 128: '#e76a49', 135: '#B7B7FF', 136: '#dc752f', 139: '#d698fe',
-      \ 140: '#b888e2', 141: '#9a9aba', 151: '#74BAAC', 160: '#e0211d', 161: '#E469FE', 167: '#ce537a',
-      \ 168: '#ce537a', 169: '#bc6ec5', 170: '#bc6ec5', 171: '#6094DB', 173: '#e18254', 176: '#E697E6',
-      \ 177: '#D881ED', 178: '#d1951d', 179: '#d4b261', 196: '#e0211d', 204: '#ce537a', 207: '#FF68DD',
-      \ 214: '#FF4848', 218: '#d19a66', 225: '#FFC8C8', 229: '#fff06a', 233: '#303030', 234: '#212026',
-      \ 235: '#292b2e', 236: '#34323e', 238: '#544a65', 239: '#44505c', 241: '#534b5d', 243: '#65737e',
-      \ 244: '#b4d1b6',
-      \ }
 
-hi User8 ctermfg=235 ctermbg=175
-hi User1 ctermfg=235 ctermbg=magenta
-hi User2 ctermfg=235 ctermbg=darkgreen
-hi User3 ctermfg=235 ctermbg=blue
-hi User4 ctermfg=235 ctermbg=cyan
-hi User5 ctermfg=235 ctermbg=white
-hi User6 ctermfg=235 ctermbg=darkyellow
-hi User7 ctermfg=235 ctermbg=grey
+function! s:hi(group, fg, bg, ...)
+  execute printf('hi %s ctermfg=%d guifg=%s ctermbg=%d guibg=%s',
+                \ a:group, a:fg, s:colors[a:fg], a:bg, s:colors[a:bg])
+endfunction
 
-set statusline+=%{ChangeStatuslineColor()}
-set statusline=%<%1*\ %{toupper(g:currentmode[mode()])}\ %*\ [B-%n]\ %*
-set statusline+=%8*\ %{GitInfo()}\ %*
-set statusline+=%2*\ [TOT:%{Buf_total_num()}]\ %*
-set statusline+=%3*\ %{File_size(@%)}\ %*
-set statusline+=%4*\ %F\ %*
-set statusline+=%5*\ [%{LinterStatus()}]\ %*
-set statusline+=%6*\ %m%r%y\ %h%w%*
-set statusline+=%=%7*\ %{&ff}\ \|\ %{\"\".(&fenc==\"\"?&enc:&fenc).((exists(\"+bomb\")\ &&\ &bomb)?\",B\":\"\")}\ %*
-set statusline+=%8*\ %p%%\ \ %l/%L\ %c\ %*
+function! s:hi_statusline()
+  call s:hi('User1'      , 0 , 99  )
+  call s:hi('paste'      , 232 , 178    , 'bold')
+  call s:hi('User2'      , 38 , 0 )
+  call s:hi('User3'      , 0 , 178 )
+  call s:hi('User4'      , 171 , 0 , 'bold' )
+  call s:hi('User5'      , 0 , 38 )
+  call s:hi('User6'      , 0 , 38 , 'bold' )
+
+  call s:hi('gutter'      , 184 , 0)
+  call s:hi('ale_error'   , 214 , 0)
+  call s:hi('ale_warning' , 197 , 0)
+
+  call s:hi('StatusLine' , 140 , 237 , 'none')
+
+  call s:hi('User7'      , 0 , 38 )
+  call s:hi('User8'      , 0 , 38 )
+endfunction
+
+
+function! s:SetStatusline(...) abort
+  let &l:statusline = s:StatusLine()
+  call s:hi_statusline()
+endfunction
+
+
+augroup statusline
+  autocmd!
+  autocmd User GitGutter,Startified,LanguageClientStarted call s:SetStatusline()
+  autocmd InsertLeave,InsertEnter,InsertChange * call s:SetStatusline()
+  autocmd BufWinEnter,ShellCmdPost,BufWritePost * call s:SetStatusline()
+  autocmd FileChangedShellPost,ColorScheme * call s:SetStatusline()
+  autocmd FileReadPre,ShellCmdPost,FileWritePost * call s:SetStatusline()
+augroup END
