@@ -76,11 +76,11 @@ set confirm             " 在处理未保存或只读文件的时候，弹出确
 " 编码设置
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 set langmenu=zh_CN.UTF-8
+language message zh_CN.UTF-8
 set helplang=cn
 set termencoding=utf-8
-set encoding=utf8
-set fileencodings=utf8,ucs-bom,gbk,cp936,gb2312,gb18030
-set fenc=utf-8
+set fileencodings=ucs-bom,utf-8,gbk,gb18030,big5,euc-jp,latin1
+set enc=utf-8
 
 " write with sudo
 cabbrev w!! w !sudo tee %
@@ -114,6 +114,7 @@ Plug 'z0mbix/vim-shfmt' , { 'for': 'sh' }
 Plug 'ervandew/supertab'
 Plug 'Yggdroot/LeaderF', { 'do': './install.sh' }
 Plug 'rking/ag.vim'
+Plug 'skywind3000/vim-keysound'
 " color
 Plug 'arcticicestudio/nord-vim'
 Plug 'liuchengxu/space-vim-dark'
@@ -315,7 +316,7 @@ func! s:compile_and_run()
 			exec 'wincmd p'
 		endif
 	elseif &filetype ==# 'html'
-		exec '!firefox % &'
+		exec '!chromium-browser % &'
 	elseif &filetype ==# 'go'
 		' exec '!go build %<'
 		exec '!time go run %'
@@ -511,6 +512,7 @@ au FileType *.md, *.markdown :UltiSnipsAddFiletypes markdown
 " AsyncRun
 autocmd  QuickFixCmdPost  *  botright  copen  8
 let g:asyncrun_encs = 'gbk'
+let g:vimmake_build_encoding = 'gbk'
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " 键位映射
@@ -556,3 +558,14 @@ nmap <leader>f :Ag! %<Left>
 " SuperTab
 "----------------------------------------------------------------------
 let g:SuperTabDefaultCompletionType = '<C-n>'
+
+
+
+let g:keysound_enable = 1
+
+" quickfix
+let g:status_var = ""
+augroup QuickfixStatus
+	au! BufWinEnter quickfix setlocal
+		\ statusline=%t\ [%{g:vimmake_build_status}]\ [%{g:asyncrun_status}]\ %{exists('w:quickfix_title')?\ '\ '.w:quickfix_title\ :\ ''}\ %=%-15(%l,%c%V%)\ %P
+augroup END
