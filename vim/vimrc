@@ -38,7 +38,7 @@ set cinoptions=g0,:0,N-s,(0    "  设置C/C++语言的具体缩进方式
 set smartindent                "  智能的选择对其方式
 filetype indent on             "  自适应不同语言的智能缩进
 filetype plugin indent on      "  enables filetype detection
-"set expandtab                  "  将制表符扩展为空格
+set expandtab                  "  将制表符扩展为空格
 set tabstop=4                  "  设置编辑时制表符占用空格数
 set shiftwidth=4               "  设置格式化时制表符占用空格数
 set softtabstop=4              "  设置4个空格为制表符
@@ -106,7 +106,7 @@ Plug 'skywind3000/asyncrun.vim'
 Plug 'w0rp/ale'
 Plug 'jiangmiao/auto-pairs'
 "Plug 'sillybun/vim-repl'
-Plug 'vimwiki/vimwiki'
+Plug 'vimwiki/vimwiki', { 'branch': 'dev' }
 Plug 'mbbill/undotree'
 Plug 'SirVer/ultisnips'
 Plug 'honza/vim-snippets'
@@ -114,7 +114,7 @@ Plug 'z0mbix/vim-shfmt' , { 'for': 'sh' }
 Plug 'ervandew/supertab'
 Plug 'Yggdroot/LeaderF', { 'do': './install.sh' }
 Plug 'rking/ag.vim'
-Plug 'skywind3000/vim-keysound'
+Plug 'mileszs/ack.vim'
 " color
 Plug 'arcticicestudio/nord-vim'
 Plug 'liuchengxu/space-vim-dark'
@@ -400,11 +400,11 @@ let g:ale_linters = {
 let g:ale_lint_on_text_changed = 'normal'
 let g:ale_lint_on_insert_leave = 1
 
-autocmd FileType python noremap <buffer> <F7> :ALEFix<CR>
+nmap <buffer> <F7> :ALEFix<CR>
 
 let g:ale_fixers = {
     \ 'python': ['autopep8', 'yapf'],
-    \ 'bash': ['shfmt'],
+    \ 'bash': ['Shfmt'],
     \ }
 "普通模式下，sp前往上一个错误或警告，sn前往下一个错误或警告
 nmap sp <Plug>(ale_previous_wrap)
@@ -449,6 +449,7 @@ let g:vimwiki_camel_case = 0
 let g:vimwiki_CJK_length = 1
 let g:vimwiki_use_calendar = 0
 let g:vimwiki_global_ext = 0
+let g:vimwiki_hl_cb_checked = 1
 let g:vimwiki_timestamp_format='%Y年%m月%d日 %H:%M:%S'
 let g:vimwiki_user_htmls = "search.html,404.html"
 
@@ -552,20 +553,23 @@ noremap <F4> :LeaderfBufTag!<cr>
 let g:Lf_StlSeparator = { 'left': '', 'right': '', 'font': '' }
 let g:LF_DefaultExternalTool = 'ag'
 
-nmap <leader>f :Ag! %<Left>
+"noremap <C-F> :<C-U><C-R>=printf("Leaderf! rg --stayOpen --recall %s ", expand("<cword>"))<CR>
+
+nmap <C-f> :Ag! <cword> %<Left><CR>
+nmap <leader>f :Ag! <cword><CR>
 
 "----------------------------------------------------------------------
 " SuperTab
 "----------------------------------------------------------------------
 let g:SuperTabDefaultCompletionType = '<C-n>'
 
-
-
-let g:keysound_enable = 1
-
 " quickfix
-let g:status_var = ""
-augroup QuickfixStatus
-	au! BufWinEnter quickfix setlocal
-		\ statusline=%t\ [%{g:vimmake_build_status}]\ [%{g:asyncrun_status}]\ %{exists('w:quickfix_title')?\ '\ '.w:quickfix_title\ :\ ''}\ %=%-15(%l,%c%V%)\ %P
-augroup END
+" let g:status_var = ""
+" augroup QuickfixStatus
+" 	au! BufWinEnter quickfix setlocal
+" 		\ statusline=%t\ [%{g:vimmake_build_status}]\ [%{g:asyncrun_status}]\ %{exists('w:quickfix_title')?\ '\ '.w:quickfix_title\ :\ ''}\ %=%-15(%l,%c%V%)\ %P
+" augroup END
+
+" Ack
+" let g:ackprg = 'ag --nogroup --nocolor --column'
+" map <leader>f :Ack<space>
