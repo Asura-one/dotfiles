@@ -1,3 +1,6 @@
 [submodule "BaiduExporter"]
 	path = BaiduExporter
 	url = https://github.com/acgotaku/BaiduExporter.git
+[submodule "spaceship-prompt"]
+	path = zsh/custom/themes/spaceship-prompt
+	url = https://github.com/denysdovhan/spaceship-prompt.git
