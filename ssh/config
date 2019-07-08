@@ -1,0 +1,20 @@
+Host *
+    KeepAlive yes
+    ServerAliveInterval 60
+    ControlMaster auto
+    ControlPersist yes
+    ControlPath ~/.ssh/socks/%h-%p-%r
+Host github.com
+   HostName github.com
+   User Asura-one
+   IdentityFile /home/asura/.ssh/id_rsa_github
+
+Host 172.16.2.38
+   HostName 172.16.2.38
+   User hufl
+   IdentityFile /home/asura/.ssh/dandelion
+
+Host jump
+   IdentityFile /home/asura/.ssh/id_rsa
+   IdentitiesOnly yes
+   Port 22

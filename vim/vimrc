@@ -76,11 +76,13 @@ set confirm             " 在处理未保存或只读文件的时候，弹出确
 " 编码设置
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 set langmenu=zh_CN.UTF-8
-language message zh_CN.UTF-8
+lang messages zh_CN.UTF-8
+language messages zh_CN.UTF-8
 set helplang=cn
+set encoding=utf-8
+set fileencoding=utf-8
 set termencoding=utf-8
 set fileencodings=ucs-bom,utf-8,gbk,gb18030,big5,euc-jp,latin1
-set enc=utf-8
 
 " write with sudo
 cabbrev w!! w !sudo tee %
@@ -94,18 +96,16 @@ Plug 'tpope/vim-fugitive'
 Plug 'zivyangll/git-blame.vim'
 Plug 'scrooloose/nerdtree'
 Plug 'jistr/vim-nerdtree-tabs'
-Plug 'iamcco/mathjax-support-for-mkdp'
-Plug 'iamcco/markdown-preview.vim'
-"Plug 'sillybun/vim-autodoc'
+Plug 'iamcco/markdown-preview.nvim', { 'do': { -> mkdp#util#install() }}
 Plug 'Yggdroot/indentLine'
-Plug 'Valloric/YouCompleteMe'
+Plug 'neoclide/coc.nvim', {'branch': 'release'}
+Plug 'cocopon/iceberg.vim'
 Plug 'ekalinin/Dockerfile.vim'
 Plug 'ryanoasis/vim-devicons'
 Plug 'godlygeek/tabular'
 Plug 'skywind3000/asyncrun.vim'
 Plug 'w0rp/ale'
 Plug 'jiangmiao/auto-pairs'
-"Plug 'sillybun/vim-repl'
 Plug 'vimwiki/vimwiki', { 'branch': 'dev' }
 Plug 'mbbill/undotree'
 Plug 'SirVer/ultisnips'
@@ -123,6 +123,7 @@ Plug 'ayu-theme/ayu-vim'
 Plug 'rakr/vim-one'
 Plug 'mhartington/oceanic-next'
 Plug 'joshdick/onedark.vim'
+Plug 'voldikss/vim-translate-me'
 call plug#end()
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
@@ -142,47 +143,144 @@ hi BadWhitespace ctermbg=red guibg=red " 使用红色显示多余空格
 
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" YouCompleteMe 代码补全
+" Coc.nvim
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-"autocomplete
-let g:ycm_add_preview_to_completeopt = 0
-let g:ycm_seed_indentifiers_with_syntax = 1
-let g:ycm_complete_in_comments = 1
-let g:ycm_complete_in_strings = 1
-let g:ycm_use_ultisnips_completer = 1
-let g:ycm_autoclose_preview_window_after_insertion = 1        " 离开插入模式自动关闭补全
-let g:ycm_collect_identifiers_from_comments_and_strings = 1   " 注释和字符串中的文字补全
-"let g:ycm_global_ycm_extra_conf = '~/.vim/.ycm_extra_conf.py'
-let g:ycm_goto_buffer_command = 'horizontal-split'            " 丰实现和声明之间跳转，并分屏打开
-let g:ycm_min_num_of_chars_for_competion = 2                  " 第二个字符开始补全
-let g:ycm_server_log_level = 'info'
-let g:ycm_show_diagnostcs_ui = 0
-"youcompleteme  默认tab  s-tab 和自动补全冲突
-"let g:ycm_key_list_select_completion = ['<Enter>', '<Down>']
-"let g:ycm_key_list_previous_completion = ['<S-TAB>', '<Up>']
-let g:ycm_key_list_select_completion = ['<C-n>', '<Down>']
-let g:ycm_key_list_previous_completion = ['<C-p>', '<Up>']
-noremap <c-z> <NOP>
-let g:ycm_key_invoke_completion= '<c-z>'
-"autocmd InsertLeave * if pumvisible() == 0|pclose|endif " 离开插入模式后自动关闭预览窗口
-"inoremap <expr> <CR>       pumvisible() ? '<C-y>' : '\<CR>' "和其他插件有冲突
-nnoremap gb :YcmCompleter GoToDeclaration<CR>
-nnoremap gl :YcmCompleter GoToDefinition<CR>
-nnoremap gx :YcmCompleter GoToDefinitionElseDeclaration<CR>
-nnoremap gy :YcmCompleter GoToReferences<CR>
-let g:ycm_semantic_triggers =  {
-			\ 'c,cpp,python,java,go,erlang,perl': ['re!\w{2}'],
-			\ 'cs,lua,javascript': ['re!\w{2}'],
-			\ }
-let g:ycm_filetype_whitelist = {
-			\ 'c':1,
-			\ 'cpp':1,
-			\ 'php':1,
-			\ 'python':1,
-			\ 'sh':1,
-			\ 'yaml':1,
-			\ 'zsh':1,
-			\ }
+" if hidden is not set, TextEdit might fail.
+set hidden
+
+" Some servers have issues with backup files, see #649
+set nobackup
+set nowritebackup
+
+" Better display for messages
+set cmdheight=2
+
+" You will have bad experience for diagnostic messages when it's default 4000.
+set updatetime=300
+
+" don't give |ins-completion-menu| messages.
+set shortmess+=c
+
+" always show signcolumns
+set signcolumn=yes
+let g:node_client_debug = 1
+"let g:coc_global_extensions = ['coc-ultisnips']
+let g:coc_watch_extensions = ['coc-snippets']
+"let g:coc_trace_client = 1
+let g:coc_node_path = '/usr/local/bin/node'
+"let g:coc_node_args = ['--nolazy', '--inspect=6045']
+let g:coc_auto_copen = 0
+" Use tab for trigger completion with characters ahead and navigate.
+" Use command ':verbose imap <tab>' to make sure tab is not mapped by other plugin.
+inoremap <silent><expr> <TAB>
+      \ pumvisible() ? "\<C-n>" :
+      \ <SID>check_back_space() ? "\<TAB>" :
+      \ coc#refresh()
+" inoremap <expr><S-TAB> pumvisible() ? "\<C-p>" : "\<C-h>"
+
+function! s:check_back_space() abort
+  let col = col('.') - 1
+  return !col || getline('.')[col - 1]  =~# '\s'
+endfunction
+
+" Use <c-space> to trigger completion.
+inoremap <silent><expr> <c-space> coc#refresh()
+
+" Use <cr> to confirm completion, `<C-g>u` means break undo chain at current position.
+" Coc only does snippet and additional edit on confirm.
+inoremap <expr> <cr> pumvisible() ? "\<C-y>" : "\<C-g>u\<CR>"
+
+" Use `[c` and `]c` to navigate diagnostics
+nmap <silent> [c <Plug>(coc-diagnostic-prev)
+nmap <silent> ]c <Plug>(coc-diagnostic-next)
+
+" Remap keys for gotos
+nmap <silent> gd <Plug>(coc-definition)
+nmap <silent> gy <Plug>(coc-type-definition)
+nmap <silent> gi <Plug>(coc-implementation)
+nmap <silent> gr <Plug>(coc-references)
+
+" Use K to show documentation in preview window
+nnoremap <silent> K :call <SID>show_documentation()<CR>
+
+function! s:show_documentation()
+  if (index(['vim','help'], &filetype) >= 0)
+    execute 'h '.expand('<cword>')
+  else
+    call CocAction('doHover')
+  endif
+endfunction
+
+" Highlight symbol under cursor on CursorHold
+autocmd CursorHold * silent call CocActionAsync('highlight')
+
+" Remap for rename current word
+nmap <leader>rn <Plug>(coc-rename)
+
+" Remap for format selected region
+xmap <leader>f  <Plug>(coc-format-selected)
+nmap <leader>f  <Plug>(coc-format-selected)
+
+augroup mygroup
+  autocmd!
+  " Setup formatexpr specified filetype(s).
+  autocmd FileType typescript,json setl formatexpr=CocAction('formatSelected')
+  " Update signature help on jump placeholder
+  autocmd User CocJumpPlaceholder call CocActionAsync('showSignatureHelp')
+augroup end
+
+" Remap for do codeAction of selected region, ex: `<leader>aap` for current paragraph
+xmap <leader>a  <Plug>(coc-codeaction-selected)
+nmap <leader>a  <Plug>(coc-codeaction-selected)
+
+" Remap for do codeAction of current line
+nmap <leader>ac  <Plug>(coc-codeaction)
+" Fix autofix problem of current line
+nmap <leader>qf  <Plug>(coc-fix-current)
+
+" Use <tab> for select selections ranges, needs server support, like: coc-tsserver, coc-python
+nmap <silent> <TAB> <Plug>(coc-range-select)
+xmap <silent> <TAB> <Plug>(coc-range-select)
+xmap <silent> <S-TAB> <Plug>(coc-range-select-backword)
+
+" Use `:Format` to format current buffer
+command! -nargs=0 Format :call CocAction('format')
+
+" Use `:Fold` to fold current buffer
+command! -nargs=? Fold :call     CocAction('fold', <f-args>)
+
+" use `:OR` for organize import of current buffer
+command! -nargs=0 OR   :call     CocAction('runCommand', 'editor.action.organizeImport')
+
+" Add diagnostic info for https://github.com/itchyny/lightline.vim
+let g:lightline = {
+      \ 'colorscheme': 'wombat',
+      \ 'active': {
+      \   'left': [ [ 'mode', 'paste' ],
+      \             [ 'cocstatus', 'readonly', 'filename', 'modified' ] ]
+      \ },
+      \ 'component_function': {
+      \   'cocstatus': 'coc#status'
+      \ },
+      \ }
+
+" Using CocList
+" Show all diagnostics
+nnoremap <silent> <space>a  :<C-u>CocList diagnostics<cr>
+" Manage extensions
+nnoremap <silent> <space>e  :<C-u>CocList extensions<cr>
+" Show commands
+nnoremap <silent> <space>c  :<C-u>CocList commands<cr>
+" Find symbol of current document
+nnoremap <silent> <space>o  :<C-u>CocList outline<cr>
+" Search workspace symbols
+nnoremap <silent> <space>s  :<C-u>CocList -I symbols<cr>
+" Do default action for next item.
+nnoremap <silent> <space>j  :<C-u>CocNext<CR>
+" Do default action for previous item.
+nnoremap <silent> <space>k  :<C-u>CocPrev<CR>
+" Resume latest coc list
+nnoremap <silent> <space>p  :<C-u>CocListResume<CR>
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " python 虚拟环境支持
@@ -209,9 +307,6 @@ hi pythonSelf  ctermfg=68  guifg=#5f87d7 cterm=bold gui=bold
 au BufRead,BufNewFile *.py,*.pyw match BadWhitespace /^\t\+/
 " Make trailing whitespace be flagged as bad.
 au BufRead,BufNewFile *.py,*.pyw,*.c,*.h match BadWhitespace /\s\+$/
-
-" Wrap text after a certain number of characters
-au BufRead,BufNewFile *.py,*.pyw, set textwidth=100
 
 " Use UNIX (\n) line endings.
 au BufNewFile *.py,*.pyw,*.c,*.h set fileformat=unix
@@ -399,12 +494,14 @@ let g:ale_linters = {
 			\}
 let g:ale_lint_on_text_changed = 'normal'
 let g:ale_lint_on_insert_leave = 1
+let g:ale_set_loclist = 0
+let g:ale_set_quickfix = 1
 
 nmap <buffer> <F7> :ALEFix<CR>
 
 let g:ale_fixers = {
     \ 'python': ['autopep8', 'yapf'],
-    \ 'bash': ['Shfmt'],
+    \ 'bash': ['shfmt'],
     \ }
 "普通模式下，sp前往上一个错误或警告，sn前往下一个错误或警告
 nmap sp <Plug>(ale_previous_wrap)
@@ -412,26 +509,6 @@ nmap sn <Plug>(ale_next_wrap)
 "<Leader>d 查看错误或警告的详细信息
 nmap <Leader>d :ALEDetail<CR>
 
-" repl
-"autocmd Filetype python nnoremap <leader>r :REPLToggle<Cr>
-"
-"let g:rep_row_width = 10            " 窗口宽度
-"let g:sendtorepl_invoke_key = 'ww'  " 传送代码快捷键，默认ww
-"let g:repl_at_top = 0               " 0标识出现在下方，1标识出现在上方
-"let g:repl_stayatrepl_when_open = 0 " 打开REPL时是回到源文件 (1) 还是停留在REPL窗口中 (0)
-"let g:repl_program = {
-"			\ 'python': 'ipython3',
-"			\ 'default': 'zsh',
-"			\}
-"let g:repl_exit_commands = {
-"			\ 'python': 'quit()',
-"			\ 'bash': 'exit',
-"			\ 'zsh': 'exit',
-"			\ 'default': 'exit',
-"			\}
-
-" auto load vimrc
-" autocmd BufWritePost $MYVIMRC source $MYVIMRC
 
 " git blame
 nmap <Leader>c :<C-u>call gitblame#echo()<CR>
@@ -453,7 +530,6 @@ let g:vimwiki_hl_cb_checked = 1
 let g:vimwiki_timestamp_format='%Y年%m月%d日 %H:%M:%S'
 let g:vimwiki_user_htmls = "search.html,404.html"
 
-
 let develop_notes = {} " 个人开发笔记
 let develop_notes.path = '~/test/test/develop-notes' " 笔记路径
 let develop_notes.syntax = 'markdown'
@@ -461,13 +537,6 @@ let develop_notes.ext = '.md'
 
 let g:vimwiki_list = [develop_notes]
 let g:vimwiki_ext2syntax = {'.md': 'markdown', '.markdown': 'markdown', '.mdown': 'markdown'}
-
-
-" vim-autodoc
-"let g:autodoc_display_return_type = 1 " 1表示输出返回值类型，0表示不输出
-"let g:autodoc_typehint_style = 'pep484' " 注释风格
-"let g:autodoc_display_runtime_info = 0 " 是否统计函数运行信息
-"map <F2> :RecordParameter<CR>
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " undotree
@@ -512,8 +581,8 @@ au FileType *.md, *.markdown :UltiSnipsAddFiletypes markdown
 
 " AsyncRun
 autocmd  QuickFixCmdPost  *  botright  copen  8
-let g:asyncrun_encs = 'gbk'
-let g:vimmake_build_encoding = 'gbk'
+let g:asyncrun_encs = 'utf-8'
+let g:vimmake_build_encoding = 'utf-8'
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " 键位映射
@@ -525,7 +594,7 @@ map <leader>r :e<CR> " 刷新文件
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " markdown
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-let g:mkdp_path_to_chrome = "/usr/bin/chromium-browser"
+let g:mkdp_browser = "/usr/bin/chromium-browser"
 let g:mkdp_auto_start = 1
 
 "----------------------------------------------------------------------
@@ -563,13 +632,19 @@ nmap <leader>f :Ag! <cword><CR>
 "----------------------------------------------------------------------
 let g:SuperTabDefaultCompletionType = '<C-n>'
 
-" quickfix
-" let g:status_var = ""
-" augroup QuickfixStatus
-" 	au! BufWinEnter quickfix setlocal
-" 		\ statusline=%t\ [%{g:vimmake_build_status}]\ [%{g:asyncrun_status}]\ %{exists('w:quickfix_title')?\ '\ '.w:quickfix_title\ :\ ''}\ %=%-15(%l,%c%V%)\ %P
-" augroup END
-
-" Ack
-" let g:ackprg = 'ag --nogroup --nocolor --column'
-" map <leader>f :Ack<space>
+" vim-translate-me
+" <Leader>t 翻译光标下的文本，在命令行回显
+nmap <silent> <Leader>t <Plug>Translate
+vmap <silent> <Leader>t <Plug>TranslateV
+" Leader>w 翻译光标下的文本，在窗口中显示
+nmap <silent> <Leader>w <Plug>TranslateW
+vmap <silent> <Leader>w <Plug>TranslateWV
+" Leader>r 替换光标下的文本为翻译内容
+nmap <silent> <Leader>r <Plug>TranslateR
+vmap <silent> <Leader>r <Plug>TranslateRV
+let g:vtm_default_engine='google'
+hi def link vtmQuery             Identifier
+hi def link vtmParaphrase        Statement
+hi def link vtmPhonetic          Special
+hi def link vtmExplain           Comment
+hi def link vtmPopupNormal       NormalFloat

@@ -56,7 +56,7 @@ ZSH_HIGHLIGHT_HIGHLIGHTERS=(main brackets pattern cursor)
 # Custom plugins may be added to ~/.oh-my-zsh/custom/plugins/
 # Example format: plugins=(rails git textmate ruby lighthouse)
 # Add wisely, as too many plugins slow down shell startup.
-plugins=(git emoji z zsh-syntax-highlighting zsh-autosuggestions taskwarrior)
+plugins=(git emoji zsh-syntax-highlighting zsh-autosuggestions taskwarrior colored-man-pages z.lua)
 
 source $ZSH/oh-my-zsh.sh
 
@@ -97,5 +97,18 @@ export GOPATH=$(go env GOPATH)
 export PATH=$PATH:/usr/local/bin/websocketd
 export PATH="$HOME/.local/bin:$PATH"
 export LC_ALL=${LANG}
+export PATH=$PATH:/media/asura/ae421aab-eba2-4776-93fb-36ca6e7c0064/asura/Download/sonar-scanner-3.3.0.1492-linux/bin
 
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
+eval "$(lua /home/asura/.oh-my-zsh/custom/plugins/z.lua/z.lua --init zsh enhanced once echo fzf)"
+alias zh='z -I -t .'
+
+# ssh() {
+#     if [ "$(ps -p $(ps -p $$ -o ppid=) -o comm=)" = "tmux" ]; then
+#       tmux rename-window "$(echo $* | cut -d . -f 1)"
+#       command ssh "$@"
+#       tmux set-window-option automatic-rename "on" 1>/dev/null
+#     else
+#       command ssh "$@"
+#     fi
+# }
