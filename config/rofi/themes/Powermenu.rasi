@@ -1,0 +1,8 @@
+
+
+@import "default"
+
+*{
+    font: "SF Pro Display 25";
+    columns: 2;
+}
