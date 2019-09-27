@@ -26,9 +26,16 @@ exec 'set rtp+='.s:home
 
 set rtp+=~/.config/.nvim
 
+" neovim not support --servername, so you need install neovim-remote
+" neovim-remote configuration
+" nvr --remote-silent %f -c %l
+
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 "                           模块加载                            "
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+LoadScript plugins/quickmenu.vim
+LoadScript plugins/buftabline.vim
+LoadScript plugins/statusline.vim
 LoadScript config/general.vim
 LoadScript config/plugin.vim
 LoadScript config/keymap.vim

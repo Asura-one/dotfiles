@@ -1,7 +1,7 @@
 " my plugin
-for s:path in split(glob('~/.vim/plugins/*.vim'), "\n")
-  exe 'source ' . s:path
-endfor
+" for s:path in split(glob('~/.vim/plugins/*.vim'), "\n")
+"   exe 'source ' . s:path
+" endfor
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 "                           插件列表                            "
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
@@ -16,7 +16,7 @@ Plug 'neoclide/coc.nvim', {'branch': 'release'}
 Plug 'cocopon/iceberg.vim'
 Plug 'ekalinin/Dockerfile.vim'
 Plug 'ryanoasis/vim-devicons'
-Plug 'godlygeek/tabular'
+Plug 'godlygeek/tabular', { 'on': 'Tabularize' }
 Plug 'skywind3000/asyncrun.vim'
 Plug 'dense-analysis/ale'
 Plug 'jiangmiao/auto-pairs'
@@ -33,6 +33,9 @@ Plug 'voldikss/vim-translate-me'
 Plug 'dhruvasagar/vim-table-mode'
 Plug 'lervag/vimtex'
 Plug 'vim-latex/vim-latex'
+Plug 'liuchengxu/vista.vim'
+Plug 'mhinz/vim-startify'
+Plug 'liuchengxu/vim-which-key', { 'on': ['WhichKey', 'WhichKey!'] }
 " color
 Plug 'arcticicestudio/nord-vim'
 Plug 'liuchengxu/space-vim-dark'
@@ -73,7 +76,19 @@ let g:coc_node_path = '/usr/bin/node'
 let g:coc_auto_copen = 0
 " Use tab for trigger completion with characters ahead and navigate.
 " Use command ':verbose imap <tab>' to make sure tab is not mapped by other plugin.
-
+let g:coc_global_extensions = [
+    \ 'coc-python',
+    \ 'coc-vimlsp',
+    \ 'coc-emmet',
+    \ 'coc-html',
+    \ 'coc-json',
+    \ 'coc-css',
+    \ 'coc-tsserver',
+    \ 'coc-yank',
+    \ 'coc-lists',
+    \ 'coc-gitignore',
+    \ 'coc-vimtex',
+    \ ]
 function! s:check_back_space() abort
   let col = col('.') - 1
   return !col || getline('.')[col - 1]  =~# '\s'
@@ -107,18 +122,6 @@ command! -nargs=? Fold :call     CocAction('fold', <f-args>)
 
 " use `:OR` for organize import of current buffer
 command! -nargs=0 OR   :call     CocAction('runCommand', 'editor.action.organizeImport')
-
-" Add diagnostic info for https://github.com/itchyny/lightline.vim
-let g:lightline = {
-      \ 'colorscheme': 'wombat',
-      \ 'active': {
-      \   'left': [ [ 'mode', 'paste' ],
-      \             [ 'cocstatus', 'readonly', 'filename', 'modified' ] ]
-      \ },
-      \ 'component_function': {
-      \   'cocstatus': 'coc#status'
-      \ },
-      \ }
 
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
@@ -367,16 +370,47 @@ autocmd FileType markdown,rst,org :silent TableModeEnable
 let g:tex_flavor='latex'
 let g:vimtex_view_method='zathura'
 let g:vimtex_quickfix_mode=0
+let g:vimtex_quickfix_latexlog= {
+      \ 'overfull' : 0,
+      \ 'underfull' : 0,
+      \ 'default' : 0,
+      \ 'packages' : {
+      \   'default' : 1,
+      \   'biblatex' : 1,
+      \   'babel' : 1,
+      \   'hyperref' : 1,
+      \ },
+      \}
+let g:vimtex_toc_config = {
+          \ 'name' : 'TOC',
+          \ 'layers' : ['content', 'todo', 'include'],
+          \ 'resize' : 1,
+          \ 'split_width' : 30,
+          \ 'todo_sorted' : 0,
+          \ 'show_help' : 1,
+          \ 'show_numbers' : 1,
+          \ 'mode' : 2,
+          \}
 let g:vimtex_fold_manual=1
+let g:vimtex_compiler_latexrun_engines = {
+    \ 'xelatex' : 'xelatex'
+    \ }
+let g:vimtex_compiler_progname = 'nvr'
 let g:vimtex_compiler_latexmk = {
-    \ 'options' : [
-    \   '-xelatex',
-    \   '-verbose',
-    \   '-file-line-error',
-    \   '-synctex=1',
-    \   '-interaction=nonstopmode',
-    \ ],
-    \}
+    \ 'backend' : 'nvim',
+    \ 'background' : 1,
+    \ 'build_dir' : '',
+    \ 'callback' : 1,
+    \ 'continuous' : 1,
+    \ 'executable' : 'latexmk',
+      \ 'options' : [
+      \   '-xelatex',
+      \   '-verbose',
+      \   '-file-line-error',
+      \   '-synctex=1',
+      \   '-interaction=nonstopmode',
+      \ ],
+      \}
 set conceallevel=1
 let g:tex_conceal='abdmg'
 
@@ -389,3 +423,30 @@ hi CursorLine cterm=NONE ctermbg=black ctermfg=NONE guibg=black guifg=NONE " 设
 hi Search cterm=NONE ctermfg=NONE ctermbg=8 " 设置搜索高亮颜色
 hi Visual cterm=NONE ctermfg=NONE ctermbg=0 " 设置Visual 模式高亮颜色
 hi BadWhitespace ctermbg=red guibg=red " 使用红色显示多余空格
+
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+"                           vista                            "
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+let g:vista_icon_indent = ["╰─▸ ", "├─▸ "]
+let g:vista_default_executive = 'ctags'
+let g:vista_ctags_cmd = {
+      \ 'haskell': 'hasktags -x -o - -c',
+      \ }
+let g:vista_fzf_preview = ['right:50%']
+let g:vista#renderer#enable_icon = 1
+
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+"                           Startify                            "
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+let g:startify_lists = [
+      \ { 'type': 'files',     'header': ['   MRU']            },
+      \ { 'type': 'bookmarks', 'header': ['   Bookmarks']      },
+      \ { 'type': 'commands',  'header': ['   Commands']       },
+      \ ]
+
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+"                           vim which key                            "
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+set timeoutlen=500
+let g:mapleader = "\<Space>"
+let g:maplocalleader = ","

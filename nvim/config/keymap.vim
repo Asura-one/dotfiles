@@ -135,3 +135,52 @@ vmap <silent> <Leader>w <Plug>TranslateWV
 " Leader>r 替换光标下的文本为翻译内容
 nmap <silent> <Leader>r <Plug>TranslateR
 vmap <silent> <Leader>r <Plug>TranslateRV
+
+
+""""""""""""""""""""""""""""""""""""""
+"Quickly Run
+"""""""""""""""""""""""""""""""""""""
+nnoremap <F5> :call <SID>compile_and_run()<CR>
+func! s:compile_and_run()
+	exec 'w'
+	if &filetype ==# 'c'
+		exec 'gcc -o3 % -o %<'
+		exec '!time ./%<'
+	elseif &filetype ==# 'cpp'
+		exec '!g++ -o3 % -o %<'
+		exec '!time ./%<'
+	elseif &filetype ==# 'java'
+		exec '!javac %'
+		exec '!time java %<'
+	elseif &filetype ==# 'sh'
+		exec 'AsyncRun! time bash %'
+	elseif &filetype ==# 'python'
+		if search('@profile')
+			exec 'AsyncRun kernprof -l -v %'
+			exec 'copen'
+			exec 'wincmd p'
+		elseif search('set_trace()')
+			exec '!python3 %'
+		else
+			exec 'AsyncRun -raw python3 %'
+			exec 'copen'
+			exec 'wincmd p'
+		endif
+	elseif &filetype ==# 'html'
+		exec '!chromium-browser % &'
+	elseif &filetype ==# 'go'
+		' exec '!go build %<'
+		exec '!time go run %'
+	elseif &filetype ==# 'md'
+		exec 'MarkdownPreview %'
+  elseif &filetype == 'tex'
+    silent! exec "VimtexStop"
+    silent! exec "VimtexCompile"
+	endif
+endfunc
+
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+"                           vim which key                            "
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+nnoremap <silent> <leader> :WhichKey '<Space>'<CR>
+nnoremap <silent> <localleader> :WhichKey ','<CR>

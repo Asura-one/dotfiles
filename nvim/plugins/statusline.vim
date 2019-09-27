@@ -74,7 +74,13 @@ function! GitInfo()
     return '  '.fugitive#head().' '
   else
     return ''
+  endif
 endfunction
+
+function! NearestMethodOrFunction() abort
+  return get(b:, 'vista_nearest_method_or_function', '')
+endfunction
+"autocmd VimEnter * call vista#RunForNearestHethodOrFunction()
 
 function! s:StatusLine()
   let l:mode = '%1* %{toupper(g:modes[mode()])} %3* [B-%n] %*'
@@ -85,9 +91,10 @@ function! s:StatusLine()
   let l:file_path = '%4* %f%*'
   let l:lint_status = '%2*%{LinterProgress}%{FixerProgress}%{LinterStatus()}%*'
   let l:pos = '%8* %m%r%y %h%w%*'
+  let l:vista = '%4* %{NearestMethodOrFunction()}%*'
   let l:enc = '%2*%=%7* %{&ff} | %{"".(&fenc==""?&enc:&fenc).((exists("+bomb") && &bomb)?",B":"")}'
   let l:pct = '%8* %p%%  %l/%L %c %*'
-  return l:mode.l:paste.l:branch.l:buf_num.l:fs.l:file_path.l:lint_status.l:pos.l:enc.l:pct
+  return l:mode.l:paste.l:branch.l:buf_num.l:fs.l:file_path.l:lint_status.l:pos.l:vista.l:enc.l:pct
 endfunction
 
 let s:colors = {
